@@ -2,6 +2,8 @@
 
 A project dashboard for managing and launching [Claude Code](https://docs.anthropic.com/en/docs/claude-code) sessions across multiple projects. Built with React 19 and Vite.
 
+![Mission Control Dashboard](public/images/mission-control-screenshot.png)
+
 ## What It Does
 
 Mission Control gives you a single-page overview of all your active projects with:

@@ -74,9 +74,11 @@ function App() {
   const [newTodoText, setNewTodoText] = useState('')
   const [launchDialog, setLaunchDialog] = useState(null)
   const [dragIndex, setDragIndex] = useState(null)
+  const [filterOpen, setFilterOpen] = useState(false)
   const searchRef = useRef(null)
   const editRef = useRef(null)
   const menuRef = useRef(null)
+  const filterRef = useRef(null)
   const todoInputRef = useRef(null)
   const cmdRef = useRef(null)
 
@@ -143,6 +145,17 @@ function App() {
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [menuOpen])
+
+  useEffect(() => {
+    if (!filterOpen) return
+    const handleClickOutside = (e) => {
+      if (filterRef.current && !filterRef.current.contains(e.target)) {
+        setFilterOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [filterOpen])
 
   // Keep starOrder in sync with stars
   useEffect(() => {
@@ -584,32 +597,57 @@ function App() {
         </div>
       </header>
 
-      <div className="filter-bar">
-        <button className={`filter-btn ${activeFilter === 'all' ? 'active' : ''}`}
-          onClick={() => setActiveFilter('all')}>All</button>
-        <button className={`filter-btn starred-btn ${activeFilter === 'starred' ? 'active' : ''}`}
-          onClick={() => setActiveFilter('starred')}>
-          Starred {starCount > 0 && <span className="filter-badge">{starCount}</span>}
-        </button>
-        <span className="filter-divider" />
-        {allCategories.map((name) => (
-          <button key={name}
-            className={`filter-btn ${activeFilter === name ? 'active' : ''}`}
-            onClick={() => setActiveFilter(activeFilter === name ? 'all' : name)}
-          >{name}</button>
-        ))}
-      </div>
-
-      {(search || activeFilter !== 'all') && (
-        <div className="filter-count">
-          {visibleProjects} of {totalProjects} projects
-          {activeFilter !== 'all' && (
-            <button className="clear-filter" onClick={() => { setActiveFilter('all'); setSearch('') }}>
-              Clear filters
-            </button>
+      <div className="filter-row">
+        <div className="filter-dropdown" ref={filterRef}>
+          <button className="filter-trigger" onClick={() => setFilterOpen(!filterOpen)}>
+            <span className="filter-label">
+              {activeFilter === 'all' ? 'All Projects' :
+               activeFilter === 'starred' ? `Starred (${starCount})` :
+               activeFilter}
+            </span>
+            <span className="filter-chevron">{filterOpen ? '\u2303' : '\u2304'}</span>
+          </button>
+          {filterOpen && (
+            <div className="filter-popdown">
+              <button className={`filter-option ${activeFilter === 'all' ? 'active' : ''}`}
+                onClick={() => { setActiveFilter('all'); setFilterOpen(false) }}>
+                {activeFilter === 'all' && <span className="filter-check">{'\u2713'}</span>}
+                All Projects
+                <span className="filter-option-count">{totalProjects}</span>
+              </button>
+              <button className={`filter-option ${activeFilter === 'starred' ? 'active' : ''}`}
+                onClick={() => { setActiveFilter('starred'); setFilterOpen(false) }}>
+                {activeFilter === 'starred' && <span className="filter-check">{'\u2713'}</span>}
+                {'\u2605'} Starred
+                <span className="filter-option-count">{starCount}</span>
+              </button>
+              <div className="filter-pop-divider" />
+              {allCategories.map((name) => {
+                const cat = projectData.categories.find((c) => c.name === name)
+                const count = cat ? cat.projects.length : 0
+                return (
+                  <button key={name}
+                    className={`filter-option ${activeFilter === name ? 'active' : ''}`}
+                    onClick={() => { setActiveFilter(activeFilter === name ? 'all' : name); setFilterOpen(false) }}>
+                    {activeFilter === name && <span className="filter-check">{'\u2713'}</span>}
+                    <span className="filter-option-icon">{cat?.icon}</span>
+                    {name}
+                    <span className="filter-option-count">{count}</span>
+                  </button>
+                )
+              })}
+            </div>
           )}
         </div>
-      )}
+        {activeFilter !== 'all' && (
+          <span className="filter-active-info">
+            {visibleProjects} of {totalProjects}
+            <button className="clear-filter" onClick={() => { setActiveFilter('all'); setSearch('') }}>
+              Clear
+            </button>
+          </span>
+        )}
+      </div>
 
       {/* Starred view: flat list with drag-and-drop */}
       {activeFilter === 'starred' && (
