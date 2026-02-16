@@ -480,9 +480,6 @@ function App() {
       <header className="header">
         <div className="header-left">
           <h1>Mission Control</h1>
-          <span className="header-meta">
-            {totalProjects} projects &middot; {projectData.lastUpdated}
-          </span>
         </div>
         <div className="header-center">
           <div className="search-bar">
@@ -669,10 +666,8 @@ function App() {
       {/* Category view */}
       {activeFilter !== 'starred' && filtered.map((category) => (
         <div className="category" key={category.name}>
-          <div className="category-header">
-            <span className="category-icon">{category.icon}</span>
-            <span className="category-name" style={{ color: category.color }}>{category.name}</span>
-            <span className="category-count">{category.projects.length}</span>
+          <div className="category-label">
+            <span className="category-name">{category.name}</span>
           </div>
           <div className="project-grid">
             {category.projects.map((project) => renderCard(project, category))}

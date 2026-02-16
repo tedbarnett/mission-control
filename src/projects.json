@@ -2,7 +2,7 @@
   "lastUpdated": "2026-02-15",
   "categories": [
     {
-      "name": "Production",
+      "name": "Live",
       "icon": "🚀",
       "color": "#10b981",
       "projects": [
@@ -39,7 +39,7 @@
       ]
     },
     {
-      "name": "Very Active",
+      "name": "Hot",
       "icon": "🔥",
       "color": "#f59e0b",
       "projects": [
@@ -134,7 +134,7 @@
       ]
     },
     {
-      "name": "Maintained",
+      "name": "Archived",
       "icon": "🛠️",
       "color": "#8b5cf6",
       "projects": [
@@ -168,7 +168,7 @@
       ]
     },
     {
-      "name": "Experimental",
+      "name": "Lab",
       "icon": "🧪",
       "color": "#ec4899",
       "projects": [
@@ -193,7 +193,7 @@
       ]
     },
     {
-      "name": "Life & Ongoing",
+      "name": "Life",
       "icon": "🧭",
       "color": "#06b6d4",
       "projects": [
