@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="300" viewBox="0 0 520 300">
+  <rect width="520" height="300" fill="#0f1117"/>
+  <!-- Film strip left -->
+  <rect x="40" y="30" width="60" height="240" rx="3" fill="none" stroke="#f59e0b" stroke-width="1.2" opacity="0.18"/>
+  <!-- Sprocket holes left strip -->
+  <rect x="48" y="45" width="10" height="14" rx="2" fill="#f59e0b" opacity="0.12"/>
+  <rect x="48" y="75" width="10" height="14" rx="2" fill="#f59e0b" opacity="0.12"/>
+  <rect x="48" y="105" width="10" height="14" rx="2" fill="#f59e0b" opacity="0.12"/>
+  <rect x="48" y="135" width="10" height="14" rx="2" fill="#f59e0b" opacity="0.12"/>
+  <rect x="48" y="165" width="10" height="14" rx="2" fill="#f59e0b" opacity="0.12"/>
+  <rect x="48" y="195" width="10" height="14" rx="2" fill="#f59e0b" opacity="0.12"/>
+  <rect x="48" y="225" width="10" height="14" rx="2" fill="#f59e0b" opacity="0.12"/>
+  <!-- Frame windows left strip -->
+  <rect x="65" y="42" width="28" height="22" rx="1" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.15"/>
+  <rect x="65" y="72" width="28" height="22" rx="1" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.15"/>
+  <rect x="65" y="102" width="28" height="22" rx="1" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.15"/>
+  <rect x="65" y="132" width="28" height="22" rx="1" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.15"/>
+  <rect x="65" y="162" width="28" height="22" rx="1" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.15"/>
+  <rect x="65" y="192" width="28" height="22" rx="1" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.15"/>
+  <rect x="65" y="222" width="28" height="22" rx="1" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.15"/>
+  <!-- Center camera/projector lens -->
+  <circle cx="260" cy="140" r="55" fill="none" stroke="#f59e0b" stroke-width="1.5" opacity="0.2"/>
+  <circle cx="260" cy="140" r="40" fill="none" stroke="#f59e0b" stroke-width="1" opacity="0.15"/>
+  <circle cx="260" cy="140" r="22" fill="none" stroke="#f59e0b" stroke-width="1" opacity="0.18"/>
+  <circle cx="260" cy="140" r="8" fill="#f59e0b" opacity="0.12"/>
+  <!-- Film strip right -->
+  <rect x="420" y="30" width="60" height="240" rx="3" fill="none" stroke="#f59e0b" stroke-width="1.2" opacity="0.18"/>
+  <rect x="462" y="45" width="10" height="14" rx="2" fill="#f59e0b" opacity="0.12"/>
+  <rect x="462" y="75" width="10" height="14" rx="2" fill="#f59e0b" opacity="0.12"/>
+  <rect x="462" y="105" width="10" height="14" rx="2" fill="#f59e0b" opacity="0.12"/>
+  <rect x="462" y="135" width="10" height="14" rx="2" fill="#f59e0b" opacity="0.12"/>
+  <rect x="462" y="165" width="10" height="14" rx="2" fill="#f59e0b" opacity="0.12"/>
+  <rect x="462" y="195" width="10" height="14" rx="2" fill="#f59e0b" opacity="0.12"/>
+  <rect x="462" y="225" width="10" height="14" rx="2" fill="#f59e0b" opacity="0.12"/>
+  <rect x="427" y="42" width="28" height="22" rx="1" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.15"/>
+  <rect x="427" y="72" width="28" height="22" rx="1" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.15"/>
+  <rect x="427" y="102" width="28" height="22" rx="1" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.15"/>
+  <rect x="427" y="132" width="28" height="22" rx="1" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.15"/>
+  <rect x="427" y="162" width="28" height="22" rx="1" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.15"/>
+  <rect x="427" y="192" width="28" height="22" rx="1" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.15"/>
+  <rect x="427" y="222" width="28" height="22" rx="1" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.15"/>
+</svg>

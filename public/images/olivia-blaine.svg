@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="300" viewBox="0 0 520 300">
+  <rect width="520" height="300" fill="#0f1117"/>
+  <!-- Chain links -->
+  <!-- Link 1 -->
+  <rect x="50" y="120" width="50" height="60" rx="15" fill="none" stroke="#06b6d4" stroke-width="1.5" opacity="0.2"/>
+  <!-- Link 2 (overlapping) -->
+  <rect x="85" y="120" width="50" height="60" rx="15" fill="none" stroke="#06b6d4" stroke-width="1.5" opacity="0.2"/>
+  <!-- Link 3 -->
+  <rect x="120" y="120" width="50" height="60" rx="15" fill="none" stroke="#06b6d4" stroke-width="1.5" opacity="0.2"/>
+  <!-- Link 4 -->
+  <rect x="155" y="120" width="50" height="60" rx="15" fill="none" stroke="#06b6d4" stroke-width="1.5" opacity="0.2"/>
+  <!-- Link 5 -->
+  <rect x="190" y="120" width="50" height="60" rx="15" fill="none" stroke="#06b6d4" stroke-width="1.5" opacity="0.18"/>
+  <!-- Link 6 -->
+  <rect x="225" y="120" width="50" height="60" rx="15" fill="none" stroke="#06b6d4" stroke-width="1.5" opacity="0.18"/>
+  <!-- Link 7 -->
+  <rect x="260" y="120" width="50" height="60" rx="15" fill="none" stroke="#06b6d4" stroke-width="1.5" opacity="0.18"/>
+  <!-- Link 8 -->
+  <rect x="295" y="120" width="50" height="60" rx="15" fill="none" stroke="#06b6d4" stroke-width="1.5" opacity="0.16"/>
+  <!-- Link 9 -->
+  <rect x="330" y="120" width="50" height="60" rx="15" fill="none" stroke="#06b6d4" stroke-width="1.5" opacity="0.16"/>
+  <!-- Link 10 -->
+  <rect x="365" y="120" width="50" height="60" rx="15" fill="none" stroke="#06b6d4" stroke-width="1.5" opacity="0.14"/>
+  <!-- Link 11 -->
+  <rect x="400" y="120" width="50" height="60" rx="15" fill="none" stroke="#06b6d4" stroke-width="1.5" opacity="0.14"/>
+  <!-- Crypto/blockchain blocks -->
+  <rect x="80" y="40" width="45" height="35" rx="3" fill="none" stroke="#06b6d4" stroke-width="0.8" opacity="0.12"/>
+  <rect x="180" y="50" width="45" height="35" rx="3" fill="none" stroke="#06b6d4" stroke-width="0.8" opacity="0.12"/>
+  <rect x="300" y="40" width="45" height="35" rx="3" fill="none" stroke="#06b6d4" stroke-width="0.8" opacity="0.12"/>
+  <rect x="400" y="48" width="45" height="35" rx="3" fill="none" stroke="#06b6d4" stroke-width="0.8" opacity="0.1"/>
+  <!-- Connections between blocks -->
+  <line x1="125" y1="57" x2="180" y2="67" stroke="#06b6d4" stroke-width="0.6" opacity="0.08" stroke-dasharray="4,3"/>
+  <line x1="225" y1="67" x2="300" y2="57" stroke="#06b6d4" stroke-width="0.6" opacity="0.08" stroke-dasharray="4,3"/>
+  <line x1="345" y1="57" x2="400" y2="65" stroke="#06b6d4" stroke-width="0.6" opacity="0.08" stroke-dasharray="4,3"/>
+  <!-- Hash text lines in blocks -->
+  <line x1="88" y1="53" x2="117" y2="53" stroke="#06b6d4" stroke-width="1" opacity="0.08" stroke-linecap="round"/>
+  <line x1="88" y1="63" x2="110" y2="63" stroke="#06b6d4" stroke-width="1" opacity="0.06" stroke-linecap="round"/>
+  <line x1="188" y1="63" x2="217" y2="63" stroke="#06b6d4" stroke-width="1" opacity="0.08" stroke-linecap="round"/>
+  <line x1="188" y1="73" x2="210" y2="73" stroke="#06b6d4" stroke-width="1" opacity="0.06" stroke-linecap="round"/>
+  <!-- Bottom decorative blocks -->
+  <rect x="120" y="220" width="40" height="30" rx="3" fill="none" stroke="#06b6d4" stroke-width="0.6" opacity="0.1"/>
+  <rect x="240" y="225" width="40" height="30" rx="3" fill="none" stroke="#06b6d4" stroke-width="0.6" opacity="0.1"/>
+  <rect x="360" y="220" width="40" height="30" rx="3" fill="none" stroke="#06b6d4" stroke-width="0.6" opacity="0.1"/>
+</svg>

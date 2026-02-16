@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="300" viewBox="0 0 520 300">
+  <rect width="520" height="300" fill="#0f1117"/>
+  <!-- City skyline -->
+  <!-- Building 1 -->
+  <rect x="30" y="140" width="35" height="120" fill="#ec4899" opacity="0.08"/>
+  <rect x="30" y="140" width="35" height="120" fill="none" stroke="#ec4899" stroke-width="0.8" opacity="0.15"/>
+  <!-- Building 2 -->
+  <rect x="70" y="100" width="28" height="160" fill="#ec4899" opacity="0.06"/>
+  <rect x="70" y="100" width="28" height="160" fill="none" stroke="#ec4899" stroke-width="0.8" opacity="0.15"/>
+  <!-- Building 3 - tall -->
+  <rect x="103" y="60" width="32" height="200" fill="#ec4899" opacity="0.07"/>
+  <rect x="103" y="60" width="32" height="200" fill="none" stroke="#ec4899" stroke-width="0.8" opacity="0.18"/>
+  <!-- Spire -->
+  <line x1="119" y1="60" x2="119" y2="35" stroke="#ec4899" stroke-width="1" opacity="0.15"/>
+  <!-- Building 4 -->
+  <rect x="140" y="110" width="40" height="150" fill="#ec4899" opacity="0.06"/>
+  <rect x="140" y="110" width="40" height="150" fill="none" stroke="#ec4899" stroke-width="0.8" opacity="0.15"/>
+  <!-- Building 5 -->
+  <rect x="185" y="85" width="35" height="175" fill="#ec4899" opacity="0.07"/>
+  <rect x="185" y="85" width="35" height="175" fill="none" stroke="#ec4899" stroke-width="0.8" opacity="0.18"/>
+  <!-- Building 6 - tallest (Empire State style) -->
+  <rect x="225" y="50" width="40" height="210" fill="#ec4899" opacity="0.08"/>
+  <rect x="225" y="50" width="40" height="210" fill="none" stroke="#ec4899" stroke-width="1" opacity="0.2"/>
+  <rect x="237" y="35" width="16" height="15" fill="none" stroke="#ec4899" stroke-width="0.8" opacity="0.18"/>
+  <line x1="245" y1="35" x2="245" y2="18" stroke="#ec4899" stroke-width="1.2" opacity="0.2"/>
+  <!-- Building 7 -->
+  <rect x="270" y="90" width="30" height="170" fill="#ec4899" opacity="0.06"/>
+  <rect x="270" y="90" width="30" height="170" fill="none" stroke="#ec4899" stroke-width="0.8" opacity="0.15"/>
+  <!-- Building 8 -->
+  <rect x="305" y="120" width="38" height="140" fill="#ec4899" opacity="0.06"/>
+  <rect x="305" y="120" width="38" height="140" fill="none" stroke="#ec4899" stroke-width="0.8" opacity="0.15"/>
+  <!-- Building 9 -->
+  <rect x="348" y="75" width="32" height="185" fill="#ec4899" opacity="0.07"/>
+  <rect x="348" y="75" width="32" height="185" fill="none" stroke="#ec4899" stroke-width="0.8" opacity="0.18"/>
+  <!-- Building 10 -->
+  <rect x="385" y="105" width="35" height="155" fill="#ec4899" opacity="0.06"/>
+  <rect x="385" y="105" width="35" height="155" fill="none" stroke="#ec4899" stroke-width="0.8" opacity="0.15"/>
+  <!-- Building 11 -->
+  <rect x="425" y="130" width="30" height="130" fill="#ec4899" opacity="0.06"/>
+  <rect x="425" y="130" width="30" height="130" fill="none" stroke="#ec4899" stroke-width="0.8" opacity="0.15"/>
+  <!-- Building 12 -->
+  <rect x="460" y="150" width="35" height="110" fill="#ec4899" opacity="0.05"/>
+  <rect x="460" y="150" width="35" height="110" fill="none" stroke="#ec4899" stroke-width="0.8" opacity="0.12"/>
+  <!-- Ground line -->
+  <line x1="20" y1="260" x2="500" y2="260" stroke="#ec4899" stroke-width="1" opacity="0.15"/>
+  <!-- Window dots on tallest building -->
+  <circle cx="237" cy="70" r="1" fill="#ec4899" opacity="0.12"/>
+  <circle cx="245" cy="70" r="1" fill="#ec4899" opacity="0.1"/>
+  <circle cx="253" cy="70" r="1" fill="#ec4899" opacity="0.12"/>
+  <circle cx="237" cy="90" r="1" fill="#ec4899" opacity="0.1"/>
+  <circle cx="245" cy="90" r="1" fill="#ec4899" opacity="0.12"/>
+  <circle cx="253" cy="90" r="1" fill="#ec4899" opacity="0.1"/>
+</svg>

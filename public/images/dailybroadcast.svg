@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="300" viewBox="0 0 520 300">
+  <rect width="520" height="300" fill="#0f1117"/>
+  <!-- Sound wave visualization - centered -->
+  <!-- Wave bars -->
+  <rect x="100" y="130" width="4" height="40" rx="2" fill="#8b5cf6" opacity="0.15"/>
+  <rect x="112" y="110" width="4" height="80" rx="2" fill="#8b5cf6" opacity="0.18"/>
+  <rect x="124" y="90" width="4" height="120" rx="2" fill="#8b5cf6" opacity="0.2"/>
+  <rect x="136" y="105" width="4" height="90" rx="2" fill="#8b5cf6" opacity="0.18"/>
+  <rect x="148" y="120" width="4" height="60" rx="2" fill="#8b5cf6" opacity="0.15"/>
+  <rect x="160" y="100" width="4" height="100" rx="2" fill="#8b5cf6" opacity="0.2"/>
+  <rect x="172" y="80" width="4" height="140" rx="2" fill="#8b5cf6" opacity="0.22"/>
+  <rect x="184" y="95" width="4" height="110" rx="2" fill="#8b5cf6" opacity="0.2"/>
+  <rect x="196" y="115" width="4" height="70" rx="2" fill="#8b5cf6" opacity="0.17"/>
+  <rect x="208" y="85" width="4" height="130" rx="2" fill="#8b5cf6" opacity="0.22"/>
+  <rect x="220" y="70" width="4" height="160" rx="2" fill="#8b5cf6" opacity="0.25"/>
+  <rect x="232" y="90" width="4" height="120" rx="2" fill="#8b5cf6" opacity="0.2"/>
+  <rect x="244" y="105" width="4" height="90" rx="2" fill="#8b5cf6" opacity="0.18"/>
+  <rect x="256" y="75" width="4" height="150" rx="2" fill="#8b5cf6" opacity="0.23"/>
+  <rect x="268" y="95" width="4" height="110" rx="2" fill="#8b5cf6" opacity="0.2"/>
+  <rect x="280" y="110" width="4" height="80" rx="2" fill="#8b5cf6" opacity="0.17"/>
+  <rect x="292" y="80" width="4" height="140" rx="2" fill="#8b5cf6" opacity="0.22"/>
+  <rect x="304" y="100" width="4" height="100" rx="2" fill="#8b5cf6" opacity="0.2"/>
+  <rect x="316" y="120" width="4" height="60" rx="2" fill="#8b5cf6" opacity="0.15"/>
+  <rect x="328" y="90" width="4" height="120" rx="2" fill="#8b5cf6" opacity="0.2"/>
+  <rect x="340" y="105" width="4" height="90" rx="2" fill="#8b5cf6" opacity="0.18"/>
+  <rect x="352" y="85" width="4" height="130" rx="2" fill="#8b5cf6" opacity="0.2"/>
+  <rect x="364" y="110" width="4" height="80" rx="2" fill="#8b5cf6" opacity="0.17"/>
+  <rect x="376" y="95" width="4" height="110" rx="2" fill="#8b5cf6" opacity="0.18"/>
+  <rect x="388" y="115" width="4" height="70" rx="2" fill="#8b5cf6" opacity="0.15"/>
+  <rect x="400" y="125" width="4" height="50" rx="2" fill="#8b5cf6" opacity="0.13"/>
+  <rect x="412" y="135" width="4" height="30" rx="2" fill="#8b5cf6" opacity="0.12"/>
+  <!-- Radio wave arcs from left -->
+  <path d="M50,150 Q50,100 80,80" fill="none" stroke="#8b5cf6" stroke-width="1" opacity="0.12"/>
+  <path d="M40,150 Q40,85 80,60" fill="none" stroke="#8b5cf6" stroke-width="0.8" opacity="0.08"/>
+  <!-- Radio wave arcs from right -->
+  <path d="M470,150 Q470,100 440,80" fill="none" stroke="#8b5cf6" stroke-width="1" opacity="0.12"/>
+  <path d="M480,150 Q480,85 440,60" fill="none" stroke="#8b5cf6" stroke-width="0.8" opacity="0.08"/>
+</svg>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="300" viewBox="0 0 520 300">
+  <rect width="520" height="300" fill="#0f1117"/>
+  <!-- Speech bubble 1 (left) -->
+  <rect x="60" y="40" width="180" height="80" rx="12" fill="none" stroke="#3b82f6" stroke-width="1.2" opacity="0.2"/>
+  <polygon points="100,120 115,140 130,120" fill="none" stroke="#3b82f6" stroke-width="1.2" opacity="0.2"/>
+  <!-- Text lines in bubble 1 -->
+  <line x1="80" y1="62" x2="200" y2="62" stroke="#3b82f6" stroke-width="2" opacity="0.12" stroke-linecap="round"/>
+  <line x1="80" y1="78" x2="180" y2="78" stroke="#3b82f6" stroke-width="2" opacity="0.12" stroke-linecap="round"/>
+  <line x1="80" y1="94" x2="160" y2="94" stroke="#3b82f6" stroke-width="2" opacity="0.1" stroke-linecap="round"/>
+  <!-- Speech bubble 2 (right) -->
+  <rect x="280" y="120" width="180" height="80" rx="12" fill="none" stroke="#3b82f6" stroke-width="1.2" opacity="0.2"/>
+  <polygon points="420,200 405,220 390,200" fill="none" stroke="#3b82f6" stroke-width="1.2" opacity="0.2"/>
+  <!-- Text lines in bubble 2 -->
+  <line x1="300" y1="142" x2="420" y2="142" stroke="#3b82f6" stroke-width="2" opacity="0.12" stroke-linecap="round"/>
+  <line x1="300" y1="158" x2="400" y2="158" stroke="#3b82f6" stroke-width="2" opacity="0.12" stroke-linecap="round"/>
+  <line x1="300" y1="174" x2="380" y2="174" stroke="#3b82f6" stroke-width="2" opacity="0.1" stroke-linecap="round"/>
+  <!-- Speech bubble 3 (bottom left, smaller) -->
+  <rect x="80" y="200" width="140" height="60" rx="10" fill="none" stroke="#3b82f6" stroke-width="1" opacity="0.15"/>
+  <polygon points="120,260 130,275 140,260" fill="none" stroke="#3b82f6" stroke-width="1" opacity="0.15"/>
+  <line x1="100" y1="218" x2="190" y2="218" stroke="#3b82f6" stroke-width="2" opacity="0.1" stroke-linecap="round"/>
+  <line x1="100" y1="234" x2="170" y2="234" stroke="#3b82f6" stroke-width="2" opacity="0.1" stroke-linecap="round"/>
+  <!-- Connecting dots (representing digital twin sync) -->
+  <circle cx="250" cy="100" r="3" fill="#3b82f6" opacity="0.15"/>
+  <circle cx="270" cy="130" r="2" fill="#3b82f6" opacity="0.12"/>
+  <circle cx="240" cy="170" r="2.5" fill="#3b82f6" opacity="0.12"/>
+  <line x1="250" y1="100" x2="270" y2="130" stroke="#3b82f6" stroke-width="0.8" opacity="0.1" stroke-dasharray="3,3"/>
+  <line x1="270" y1="130" x2="240" y2="170" stroke="#3b82f6" stroke-width="0.8" opacity="0.1" stroke-dasharray="3,3"/>
+</svg>

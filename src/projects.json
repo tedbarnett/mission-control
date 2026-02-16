@@ -1,0 +1,239 @@
+{
+  "lastUpdated": "2026-02-15",
+  "categories": [
+    {
+      "name": "Production",
+      "icon": "🚀",
+      "color": "#10b981",
+      "projects": [
+        {
+          "id": 1,
+          "name": "Mission Control",
+          "path": "~/.claude/dashboard",
+          "tech": ["React 19", "Vite", "localhost:3333"],
+          "status": "Project dashboard for Claude Code",
+          "nextSteps": "Enhancements, deploy option",
+          "url": "http://localhost:3333",
+          "todos": ["Deploy to Cloudflare Pages", "Auto-refresh from git activity"]
+        },
+        {
+          "id": 2,
+          "name": "Post-Scarcity",
+          "path": "~/Github/Post-Scarcity",
+          "tech": ["React 18", "Cloudflare Pages", "D1"],
+          "status": "Live on Cloudflare Pages",
+          "nextSteps": "Prep for Reason Weekend panel (March 2026)",
+          "url": "https://post-scarcity.pages.dev",
+          "todos": ["Finalize demo for panel", "Update pension data in QGIS"]
+        },
+        {
+          "id": 3,
+          "name": "Reason AI",
+          "path": "~/Github/Reason_AI",
+          "tech": ["Flask", "SQLite", "HNSW", "LM Studio"],
+          "status": "Live on AWS EC2",
+          "nextSteps": "Ongoing maintenance, reboot check",
+          "url": "https://reasonai.barnettlabs.tech",
+          "todos": ["Health check / reboot monitoring", "Update dependencies"]
+        }
+      ]
+    },
+    {
+      "name": "Very Active",
+      "icon": "🔥",
+      "color": "#f59e0b",
+      "projects": [
+        {
+          "id": 4,
+          "name": "Home Movies",
+          "path": "~/Github/Home_Movies",
+          "tech": ["Flask", "Whisper", "DeepFace", "PostgreSQL"],
+          "status": "Transcription + face recognition pipeline",
+          "nextSteps": "Webapp refinement, face recognition accuracy",
+          "todos": ["Improve face clustering accuracy", "Web UI polish", "Batch processing pipeline"]
+        },
+        {
+          "id": 5,
+          "name": "Growing Up",
+          "path": "~/Github/Growing_Up-Claude",
+          "tech": ["React 19", "TypeScript", "Express", "TensorFlow.js"],
+          "status": "Web app working, mobile spec ready",
+          "nextSteps": "Build React Native mobile companion app",
+          "todos": ["Scaffold React Native project", "Port core features to mobile"]
+        },
+        {
+          "id": 6,
+          "name": "MapWalk iOS",
+          "path": "~/MapWalk_iOS",
+          "tech": ["Swift", "MapKit", "ARKit"],
+          "status": "iOS app with recent cosmetic fixes",
+          "nextSteps": "Historical map overlays, annotation polish",
+          "todos": ["Add historical map overlay support", "Polish annotation UI"]
+        }
+      ]
+    },
+    {
+      "name": "Active",
+      "icon": "⚡",
+      "color": "#3b82f6",
+      "projects": [
+        {
+          "id": 7,
+          "name": "Digital Twins — Neil",
+          "path": "~/barnettlabs Dropbox/.../Digital Twins/Neil Barnett",
+          "tech": ["Python", "SQLite", "RAG", "Audio"],
+          "status": "1,732 passages, 287K words indexed",
+          "nextSteps": "Write biography chapters, build digital twin RAG",
+          "todos": ["Draft first biography chapter", "Build RAG query interface"]
+        },
+        {
+          "id": 8,
+          "name": "Boswell",
+          "path": "~/Boswell",
+          "tech": ["Swift", "iOS"],
+          "status": "iOS app",
+          "nextSteps": "iOS 26 updates",
+          "todos": ["Update for iOS 26 APIs"]
+        },
+        {
+          "id": 9,
+          "name": "DreamBuilder iOS",
+          "path": "~/DreamBuilder_iOS",
+          "tech": ["Swift", "ARKit", "visionOS"],
+          "status": "iOS + Apple Vision Pro AR viewer",
+          "nextSteps": "iOS 26 updates",
+          "todos": ["Update for iOS 26 APIs"]
+        },
+        {
+          "id": 10,
+          "name": "TimeWalk Mobile",
+          "path": "~/TimeWalk-mobile",
+          "tech": ["Swift", "iOS"],
+          "status": "Historic buildings on iOS",
+          "nextSteps": "iOS 26 updates",
+          "todos": ["Update for iOS 26 APIs"]
+        },
+        {
+          "id": 11,
+          "name": "TimeWalk Photo",
+          "path": "~/TimeWalkPhoto",
+          "tech": ["Swift", "CoreLocation"],
+          "status": "Photo + GPS metadata capture",
+          "nextSteps": "Telemetry overlay improvements",
+          "todos": ["Improve telemetry overlay", "v0.5 release"]
+        },
+        {
+          "id": 12,
+          "name": "VideoWatcher",
+          "path": "~/VideoWatcher",
+          "tech": ["Swift", "AVKit"],
+          "status": "iOS/Mac random video player",
+          "nextSteps": "Favoriting, annotations, random start points",
+          "todos": ["Add favoriting", "Random start point feature", "Annotations"]
+        }
+      ]
+    },
+    {
+      "name": "Maintained",
+      "icon": "🛠️",
+      "color": "#8b5cf6",
+      "projects": [
+        {
+          "id": 13,
+          "name": "DailyBroadcast",
+          "path": "~/DailyBroadcast",
+          "tech": ["Flask", "OpenAI", "ElevenLabs"],
+          "status": "Libertarian news audio generator",
+          "nextSteps": "Maintained",
+          "todos": []
+        },
+        {
+          "id": 14,
+          "name": "VP Supervisor",
+          "path": "~/VP_Supervisor",
+          "tech": ["Unreal Engine 5", "Blueprints"],
+          "status": "UE5 Editor Widget for VP",
+          "nextSteps": "Design improvements",
+          "todos": ["UI design refresh"]
+        },
+        {
+          "id": 15,
+          "name": "TimeWalk AVP",
+          "path": "~/TimeWalkAVP",
+          "tech": ["Swift", "visionOS", "USDZ"],
+          "status": "Apple Vision Pro prototype",
+          "nextSteps": "GPS-locked model testing",
+          "todos": ["GPS-locked model placement tests"]
+        }
+      ]
+    },
+    {
+      "name": "Experimental",
+      "icon": "🧪",
+      "color": "#ec4899",
+      "projects": [
+        {
+          "id": 16,
+          "name": "Clawd",
+          "path": "~/clawd",
+          "tech": ["Claude", "Agent Framework"],
+          "status": "Agent identity/bootstrap system",
+          "nextSteps": "Identity system design",
+          "todos": ["Design identity/bootstrap system"]
+        },
+        {
+          "id": 17,
+          "name": "Manhattan AI",
+          "path": "~/Manhattan_AI",
+          "tech": ["Unreal Engine 5", "Inworld"],
+          "status": "AI NPC testing in UE5",
+          "nextSteps": "AI integration experiments",
+          "todos": ["Experiment with AI NPC integration"]
+        }
+      ]
+    },
+    {
+      "name": "Life & Ongoing",
+      "icon": "🧭",
+      "color": "#06b6d4",
+      "projects": [
+        {
+          "id": 18,
+          "name": "Mom's Health",
+          "path": null,
+          "tech": ["AI Chat"],
+          "status": "Ongoing health tracking & research",
+          "nextSteps": "ZEO patch results, Afib discussion with doctor",
+          "todos": ["ZEO patch results", "Afib discussion with doctor"]
+        },
+        {
+          "id": 19,
+          "name": "Olivia & Blaine — Crypto Startup",
+          "path": null,
+          "tech": ["AI Chat"],
+          "status": "Advisory / feedback",
+          "nextSteps": "Give feedback on Spirit Protocol",
+          "todos": ["Review Spirit Protocol"]
+        },
+        {
+          "id": 20,
+          "name": "Willa",
+          "path": null,
+          "tech": ["AI Chat"],
+          "status": "Support & planning",
+          "nextSteps": "Visit the Cloisters, cannabis cessation programs",
+          "todos": ["Plan Cloisters visit", "Research cessation programs"]
+        },
+        {
+          "id": 21,
+          "name": "Reason Weekend Prep",
+          "path": null,
+          "tech": ["Event"],
+          "status": "March 2026 panel",
+          "nextSteps": "Post-Scarcity demo, pension data into QGIS",
+          "todos": ["Finalize Post-Scarcity demo", "Pension data into QGIS"]
+        }
+      ]
+    }
+  ]
+}

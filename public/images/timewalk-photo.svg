@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="300" viewBox="0 0 520 300">
+  <rect width="520" height="300" fill="#0f1117"/>
+  <!-- Outer viewfinder frame -->
+  <rect x="110" y="50" width="300" height="200" rx="4" fill="none" stroke="#3b82f6" stroke-width="1.5" opacity="0.2"/>
+  <!-- Inner frame -->
+  <rect x="140" y="72" width="240" height="156" fill="none" stroke="#3b82f6" stroke-width="0.8" opacity="0.12"/>
+  <!-- Rule of thirds - vertical -->
+  <line x1="220" y1="72" x2="220" y2="228" stroke="#3b82f6" stroke-width="0.5" opacity="0.1"/>
+  <line x1="300" y1="72" x2="300" y2="228" stroke="#3b82f6" stroke-width="0.5" opacity="0.1"/>
+  <!-- Rule of thirds - horizontal -->
+  <line x1="140" y1="124" x2="380" y2="124" stroke="#3b82f6" stroke-width="0.5" opacity="0.1"/>
+  <line x1="140" y1="176" x2="380" y2="176" stroke="#3b82f6" stroke-width="0.5" opacity="0.1"/>
+  <!-- Center crosshair -->
+  <line x1="255" y1="140" x2="265" y2="140" stroke="#3b82f6" stroke-width="1" opacity="0.2"/>
+  <line x1="260" y1="135" x2="260" y2="145" stroke="#3b82f6" stroke-width="1" opacity="0.2"/>
+  <!-- Center focus circle -->
+  <circle cx="260" cy="150" r="30" fill="none" stroke="#3b82f6" stroke-width="0.8" opacity="0.15"/>
+  <circle cx="260" cy="150" r="18" fill="none" stroke="#3b82f6" stroke-width="0.5" opacity="0.1"/>
+  <!-- Corner brackets (focus points) -->
+  <!-- Top left -->
+  <line x1="155" y1="82" x2="170" y2="82" stroke="#3b82f6" stroke-width="1" opacity="0.18"/>
+  <line x1="155" y1="82" x2="155" y2="97" stroke="#3b82f6" stroke-width="1" opacity="0.18"/>
+  <!-- Top right -->
+  <line x1="365" y1="82" x2="350" y2="82" stroke="#3b82f6" stroke-width="1" opacity="0.18"/>
+  <line x1="365" y1="82" x2="365" y2="97" stroke="#3b82f6" stroke-width="1" opacity="0.18"/>
+  <!-- Bottom left -->
+  <line x1="155" y1="218" x2="170" y2="218" stroke="#3b82f6" stroke-width="1" opacity="0.18"/>
+  <line x1="155" y1="218" x2="155" y2="203" stroke="#3b82f6" stroke-width="1" opacity="0.18"/>
+  <!-- Bottom right -->
+  <line x1="365" y1="218" x2="350" y2="218" stroke="#3b82f6" stroke-width="1" opacity="0.18"/>
+  <line x1="365" y1="218" x2="365" y2="203" stroke="#3b82f6" stroke-width="1" opacity="0.18"/>
+  <!-- Camera body hint top -->
+  <rect x="230" y="35" width="60" height="18" rx="8" fill="none" stroke="#3b82f6" stroke-width="0.8" opacity="0.12"/>
+  <!-- Exposure info bar -->
+  <line x1="130" y1="265" x2="180" y2="265" stroke="#3b82f6" stroke-width="1.5" opacity="0.1" stroke-linecap="round"/>
+  <line x1="340" y1="265" x2="390" y2="265" stroke="#3b82f6" stroke-width="1.5" opacity="0.1" stroke-linecap="round"/>
+  <circle cx="260" cy="265" r="3" fill="none" stroke="#3b82f6" stroke-width="0.8" opacity="0.12"/>
+</svg>

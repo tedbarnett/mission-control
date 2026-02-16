@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="300" viewBox="0 0 520 300">
+  <rect width="520" height="300" fill="#0f1117"/>
+  <!-- Map grid -->
+  <line x1="60" y1="0" x2="60" y2="300" stroke="#f59e0b" stroke-width="0.5" opacity="0.08"/>
+  <line x1="120" y1="0" x2="120" y2="300" stroke="#f59e0b" stroke-width="0.5" opacity="0.08"/>
+  <line x1="180" y1="0" x2="180" y2="300" stroke="#f59e0b" stroke-width="0.5" opacity="0.08"/>
+  <line x1="240" y1="0" x2="240" y2="300" stroke="#f59e0b" stroke-width="0.5" opacity="0.08"/>
+  <line x1="300" y1="0" x2="300" y2="300" stroke="#f59e0b" stroke-width="0.5" opacity="0.08"/>
+  <line x1="360" y1="0" x2="360" y2="300" stroke="#f59e0b" stroke-width="0.5" opacity="0.08"/>
+  <line x1="420" y1="0" x2="420" y2="300" stroke="#f59e0b" stroke-width="0.5" opacity="0.08"/>
+  <line x1="480" y1="0" x2="480" y2="300" stroke="#f59e0b" stroke-width="0.5" opacity="0.08"/>
+  <line x1="0" y1="50" x2="520" y2="50" stroke="#f59e0b" stroke-width="0.5" opacity="0.08"/>
+  <line x1="0" y1="100" x2="520" y2="100" stroke="#f59e0b" stroke-width="0.5" opacity="0.08"/>
+  <line x1="0" y1="150" x2="520" y2="150" stroke="#f59e0b" stroke-width="0.5" opacity="0.08"/>
+  <line x1="0" y1="200" x2="520" y2="200" stroke="#f59e0b" stroke-width="0.5" opacity="0.08"/>
+  <line x1="0" y1="250" x2="520" y2="250" stroke="#f59e0b" stroke-width="0.5" opacity="0.08"/>
+  <!-- Compass rose -->
+  <circle cx="380" cy="150" r="60" fill="none" stroke="#f59e0b" stroke-width="1" opacity="0.15"/>
+  <circle cx="380" cy="150" r="45" fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.1"/>
+  <!-- N pointer -->
+  <polygon points="380,90 374,120 380,110 386,120" fill="#f59e0b" opacity="0.22"/>
+  <!-- S pointer -->
+  <polygon points="380,210 374,180 380,190 386,180" fill="#f59e0b" opacity="0.12"/>
+  <!-- E pointer -->
+  <polygon points="440,150 410,144 420,150 410,156" fill="#f59e0b" opacity="0.12"/>
+  <!-- W pointer -->
+  <polygon points="320,150 350,144 340,150 350,156" fill="#f59e0b" opacity="0.12"/>
+  <!-- Cross hairs -->
+  <line x1="380" y1="88" x2="380" y2="212" stroke="#f59e0b" stroke-width="0.8" opacity="0.15"/>
+  <line x1="318" y1="150" x2="442" y2="150" stroke="#f59e0b" stroke-width="0.8" opacity="0.15"/>
+  <!-- Diagonal lines -->
+  <line x1="338" y1="108" x2="422" y2="192" stroke="#f59e0b" stroke-width="0.5" opacity="0.1"/>
+  <line x1="422" y1="108" x2="338" y2="192" stroke="#f59e0b" stroke-width="0.5" opacity="0.1"/>
+  <!-- Map pin -->
+  <circle cx="160" cy="120" r="8" fill="none" stroke="#f59e0b" stroke-width="1.2" opacity="0.2"/>
+  <circle cx="160" cy="120" r="3" fill="#f59e0b" opacity="0.15"/>
+  <line x1="160" y1="128" x2="160" y2="145" stroke="#f59e0b" stroke-width="1" opacity="0.18"/>
+</svg>

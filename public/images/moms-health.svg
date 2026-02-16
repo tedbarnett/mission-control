@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="300" viewBox="0 0 520 300">
+  <rect width="520" height="300" fill="#0f1117"/>
+  <!-- Heart shape -->
+  <path d="M260,220 Q260,220 220,180 Q160,120 160,90 Q160,55 190,55 Q220,55 240,80 Q250,92 260,105 Q270,92 280,80 Q300,55 330,55 Q360,55 360,90 Q360,120 300,180 Z" fill="none" stroke="#06b6d4" stroke-width="1.5" opacity="0.2"/>
+  <!-- Inner heart glow -->
+  <path d="M260,200 Q260,200 228,170 Q180,125 180,100 Q180,72 205,72 Q228,72 245,92 Q252,100 260,110 Q268,100 275,92 Q292,72 315,72 Q340,72 340,100 Q340,125 292,170 Z" fill="#06b6d4" opacity="0.04"/>
+  <!-- Pulse line / EKG -->
+  <polyline points="30,150 80,150 100,150 120,150 140,148 155,150 170,150 190,150 210,145 225,155 235,130 245,90 255,180 265,60 275,170 285,110 295,145 305,155 315,148 330,150 350,150 370,150 400,150 430,150 460,150 490,150" fill="none" stroke="#06b6d4" stroke-width="1.5" opacity="0.22" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Horizontal baseline reference -->
+  <line x1="30" y1="150" x2="490" y2="150" stroke="#06b6d4" stroke-width="0.5" opacity="0.06"/>
+  <!-- Subtle grid -->
+  <line x1="30" y1="100" x2="490" y2="100" stroke="#06b6d4" stroke-width="0.3" opacity="0.05"/>
+  <line x1="30" y1="200" x2="490" y2="200" stroke="#06b6d4" stroke-width="0.3" opacity="0.05"/>
+  <line x1="30" y1="50" x2="490" y2="50" stroke="#06b6d4" stroke-width="0.3" opacity="0.05"/>
+  <line x1="30" y1="250" x2="490" y2="250" stroke="#06b6d4" stroke-width="0.3" opacity="0.05"/>
+  <!-- Small decorative crosses (medical) -->
+  <line x1="55" y1="40" x2="55" y2="56" stroke="#06b6d4" stroke-width="1" opacity="0.1"/>
+  <line x1="47" y1="48" x2="63" y2="48" stroke="#06b6d4" stroke-width="1" opacity="0.1"/>
+  <line x1="455" y1="240" x2="455" y2="256" stroke="#06b6d4" stroke-width="1" opacity="0.1"/>
+  <line x1="447" y1="248" x2="463" y2="248" stroke="#06b6d4" stroke-width="1" opacity="0.1"/>
+</svg>

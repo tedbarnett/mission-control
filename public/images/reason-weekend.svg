@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="300" viewBox="0 0 520 300">
+  <rect width="520" height="300" fill="#0f1117"/>
+  <!-- Microphone body -->
+  <rect x="240" y="60" width="40" height="100" rx="20" fill="none" stroke="#06b6d4" stroke-width="1.5" opacity="0.2"/>
+  <!-- Microphone grille lines -->
+  <line x1="245" y1="72" x2="275" y2="72" stroke="#06b6d4" stroke-width="0.6" opacity="0.1"/>
+  <line x1="245" y1="82" x2="275" y2="82" stroke="#06b6d4" stroke-width="0.6" opacity="0.1"/>
+  <line x1="245" y1="92" x2="275" y2="92" stroke="#06b6d4" stroke-width="0.6" opacity="0.1"/>
+  <line x1="245" y1="102" x2="275" y2="102" stroke="#06b6d4" stroke-width="0.6" opacity="0.1"/>
+  <line x1="245" y1="112" x2="275" y2="112" stroke="#06b6d4" stroke-width="0.6" opacity="0.1"/>
+  <line x1="245" y1="122" x2="275" y2="122" stroke="#06b6d4" stroke-width="0.6" opacity="0.1"/>
+  <line x1="245" y1="132" x2="275" y2="132" stroke="#06b6d4" stroke-width="0.6" opacity="0.1"/>
+  <!-- Mic stand -->
+  <line x1="260" y1="160" x2="260" y2="250" stroke="#06b6d4" stroke-width="1.5" opacity="0.18"/>
+  <!-- Stand base -->
+  <line x1="225" y1="250" x2="295" y2="250" stroke="#06b6d4" stroke-width="1.5" opacity="0.15"/>
+  <!-- Stand clip -->
+  <path d="M225,155 Q225,170 240,170" fill="none" stroke="#06b6d4" stroke-width="1" opacity="0.15"/>
+  <path d="M295,155 Q295,170 280,170" fill="none" stroke="#06b6d4" stroke-width="1" opacity="0.15"/>
+  <!-- Sound waves emanating left -->
+  <path d="M220,90 Q200,110 220,130" fill="none" stroke="#06b6d4" stroke-width="1" opacity="0.15"/>
+  <path d="M205,75 Q175,110 205,145" fill="none" stroke="#06b6d4" stroke-width="0.8" opacity="0.12"/>
+  <path d="M190,60 Q150,110 190,160" fill="none" stroke="#06b6d4" stroke-width="0.6" opacity="0.08"/>
+  <!-- Sound waves emanating right -->
+  <path d="M300,90 Q320,110 300,130" fill="none" stroke="#06b6d4" stroke-width="1" opacity="0.15"/>
+  <path d="M315,75 Q345,110 315,145" fill="none" stroke="#06b6d4" stroke-width="0.8" opacity="0.12"/>
+  <path d="M330,60 Q370,110 330,160" fill="none" stroke="#06b6d4" stroke-width="0.6" opacity="0.08"/>
+  <!-- Stage lights from top -->
+  <line x1="80" y1="0" x2="180" y2="120" stroke="#06b6d4" stroke-width="0.5" opacity="0.06"/>
+  <line x1="440" y1="0" x2="340" y2="120" stroke="#06b6d4" stroke-width="0.5" opacity="0.06"/>
+  <line x1="260" y1="0" x2="260" y2="50" stroke="#06b6d4" stroke-width="0.5" opacity="0.08"/>
+  <!-- Stage floor line -->
+  <line x1="60" y1="270" x2="460" y2="270" stroke="#06b6d4" stroke-width="0.8" opacity="0.1"/>
+  <!-- Spotlight circles on floor -->
+  <ellipse cx="260" cy="270" rx="60" ry="8" fill="none" stroke="#06b6d4" stroke-width="0.6" opacity="0.08"/>
+  <ellipse cx="260" cy="270" rx="100" ry="12" fill="none" stroke="#06b6d4" stroke-width="0.4" opacity="0.05"/>
+</svg>

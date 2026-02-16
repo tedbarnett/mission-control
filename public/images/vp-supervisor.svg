@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="300" viewBox="0 0 520 300">
+  <rect width="520" height="300" fill="#0f1117"/>
+  <!-- Monitor outline -->
+  <rect x="60" y="30" width="400" height="220" rx="6" fill="none" stroke="#8b5cf6" stroke-width="1.5" opacity="0.2"/>
+  <!-- Screen inner -->
+  <rect x="75" y="42" width="370" height="196" rx="2" fill="none" stroke="#8b5cf6" stroke-width="0.8" opacity="0.12"/>
+  <!-- Screen grid -->
+  <!-- Vertical grid lines -->
+  <line x1="167" y1="42" x2="167" y2="238" stroke="#8b5cf6" stroke-width="0.5" opacity="0.08"/>
+  <line x1="260" y1="42" x2="260" y2="238" stroke="#8b5cf6" stroke-width="0.5" opacity="0.1"/>
+  <line x1="352" y1="42" x2="352" y2="238" stroke="#8b5cf6" stroke-width="0.5" opacity="0.08"/>
+  <!-- Horizontal grid lines -->
+  <line x1="75" y1="90" x2="445" y2="90" stroke="#8b5cf6" stroke-width="0.5" opacity="0.08"/>
+  <line x1="75" y1="140" x2="445" y2="140" stroke="#8b5cf6" stroke-width="0.5" opacity="0.1"/>
+  <line x1="75" y1="190" x2="445" y2="190" stroke="#8b5cf6" stroke-width="0.5" opacity="0.08"/>
+  <!-- Viewport panels -->
+  <rect x="82" y="48" width="80" height="38" rx="1" fill="none" stroke="#8b5cf6" stroke-width="0.8" opacity="0.15"/>
+  <rect x="170" y="48" width="80" height="38" rx="1" fill="none" stroke="#8b5cf6" stroke-width="0.8" opacity="0.15"/>
+  <rect x="258" y="48" width="80" height="38" rx="1" fill="none" stroke="#8b5cf6" stroke-width="0.8" opacity="0.15"/>
+  <rect x="346" y="48" width="92" height="38" rx="1" fill="none" stroke="#8b5cf6" stroke-width="0.8" opacity="0.15"/>
+  <!-- Sidebar panel suggestion -->
+  <rect x="82" y="94" width="80" height="138" rx="1" fill="none" stroke="#8b5cf6" stroke-width="0.6" opacity="0.1"/>
+  <!-- Content area -->
+  <rect x="170" y="94" width="268" height="138" rx="1" fill="none" stroke="#8b5cf6" stroke-width="0.6" opacity="0.1"/>
+  <!-- Mini UI elements in sidebar -->
+  <line x1="90" y1="108" x2="150" y2="108" stroke="#8b5cf6" stroke-width="1.5" opacity="0.1" stroke-linecap="round"/>
+  <line x1="90" y1="122" x2="140" y2="122" stroke="#8b5cf6" stroke-width="1.5" opacity="0.08" stroke-linecap="round"/>
+  <line x1="90" y1="136" x2="145" y2="136" stroke="#8b5cf6" stroke-width="1.5" opacity="0.08" stroke-linecap="round"/>
+  <line x1="90" y1="150" x2="135" y2="150" stroke="#8b5cf6" stroke-width="1.5" opacity="0.08" stroke-linecap="round"/>
+  <!-- Monitor stand -->
+  <line x1="260" y1="250" x2="260" y2="275" stroke="#8b5cf6" stroke-width="2" opacity="0.15"/>
+  <line x1="220" y1="275" x2="300" y2="275" stroke="#8b5cf6" stroke-width="1.5" opacity="0.15"/>
+</svg>
