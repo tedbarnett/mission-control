@@ -40,40 +40,6 @@
   position: relative;
 }
 
-/* Search */
-.search-bar {
-  position: relative;
-  width: 170px;
-  max-width: 100%;
-}
-
-.search-bar input {
-  width: 100%;
-  padding: 0.45rem 2rem 0.45rem 2rem;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text-primary);
-  font-size: 0.8rem;
-  font-family: inherit;
-  outline: none;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.search-bar input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
-}
-
-.search-bar .search-icon {
-  position: absolute;
-  left: 0.65rem;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
-
 /* Hamburger button */
 .hamburger {
   display: flex;
@@ -315,14 +281,6 @@
 }
 
 /* Filter dropdown */
-.filter-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-top: -32px;
-  margin-bottom: 1rem;
-}
-
 .filter-dropdown {
   position: relative;
 }
@@ -411,6 +369,41 @@
   font-size: 0.6rem;
   color: var(--text-muted);
   font-family: 'SF Mono', monospace;
+}
+
+.filter-search {
+  position: relative;
+  padding: 0.35rem 0.5rem;
+}
+
+.filter-search input {
+  width: 100%;
+  padding: 0.3rem 1.5rem 0.3rem 0.5rem;
+  font-size: 0.75rem;
+  font-family: inherit;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  outline: none;
+}
+
+.filter-search input:focus {
+  border-color: #3b82f6;
+}
+
+.filter-search-clear {
+  position: absolute;
+  right: 0.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0;
+  line-height: 1;
 }
 
 .filter-pop-divider {
@@ -932,19 +925,9 @@
   .header-meta {
     display: none;
   }
-  .filter-row {
-    margin-top: calc(-32px + 4px);
-  }
   .header-center {
     flex: 1;
     min-width: 0;
-  }
-  .search-bar {
-    width: 170px;
-  }
-  .search-bar input {
-    font-size: 0.75rem;
-    padding: 0.4rem 1.8rem;
   }
   .project-grid {
     grid-template-columns: 1fr;
@@ -963,12 +946,5 @@
   }
   .header-center {
     flex: 1;
-  }
-  .search-bar {
-    width: 170px;
-  }
-  .search-bar input {
-    font-size: 0.7rem;
-    padding: 0.35rem 1.6rem;
   }
 }

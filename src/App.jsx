@@ -482,19 +482,59 @@ function App() {
           <h1>Mission Control</h1>
         </div>
         <div className="header-center">
-          <div className="search-bar">
-            <span className="search-icon">&#x2315;</span>
-            <input
-              ref={searchRef}
-              type="text"
-              placeholder="Search projects..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            {search && (
-              <button className="search-clear" onClick={() => setSearch('')}>
-                &times;
-              </button>
+          <div className="filter-dropdown" ref={filterRef}>
+            <button className="filter-trigger" onClick={() => setFilterOpen(!filterOpen)}>
+              <span className="filter-label">
+                {search ? `Search: ${search}` :
+                 activeFilter === 'all' ? 'All Projects' :
+                 activeFilter === 'starred' ? `Starred (${starCount})` :
+                 activeFilter}
+              </span>
+              <span className="filter-chevron">{filterOpen ? '\u2303' : '\u2304'}</span>
+            </button>
+            {filterOpen && (
+              <div className="filter-popdown">
+                <div className="filter-search">
+                  <input
+                    ref={searchRef}
+                    type="text"
+                    placeholder="Search projects..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    autoFocus
+                  />
+                  {search && (
+                    <button className="filter-search-clear" onClick={() => setSearch('')}>&times;</button>
+                  )}
+                </div>
+                <div className="filter-pop-divider" />
+                <button className={`filter-option ${activeFilter === 'all' && !search ? 'active' : ''}`}
+                  onClick={() => { setActiveFilter('all'); setSearch(''); setFilterOpen(false) }}>
+                  {activeFilter === 'all' && !search && <span className="filter-check">{'\u2713'}</span>}
+                  All Projects
+                  <span className="filter-option-count">{totalProjects}</span>
+                </button>
+                <button className={`filter-option ${activeFilter === 'starred' ? 'active' : ''}`}
+                  onClick={() => { setActiveFilter('starred'); setSearch(''); setFilterOpen(false) }}>
+                  {activeFilter === 'starred' && <span className="filter-check">{'\u2713'}</span>}
+                  {'\u2605'} Starred
+                  <span className="filter-option-count">{starCount}</span>
+                </button>
+                <div className="filter-pop-divider" />
+                {allCategories.map((name) => {
+                  const cat = projectData.categories.find((c) => c.name === name)
+                  const count = cat ? cat.projects.length : 0
+                  return (
+                    <button key={name}
+                      className={`filter-option ${activeFilter === name ? 'active' : ''}`}
+                      onClick={() => { setActiveFilter(activeFilter === name ? 'all' : name); setSearch(''); setFilterOpen(false) }}>
+                      {activeFilter === name && <span className="filter-check">{'\u2713'}</span>}
+                      {name}
+                      <span className="filter-option-count">{count}</span>
+                    </button>
+                  )
+                })}
+              </div>
             )}
           </div>
         </div>
@@ -593,58 +633,6 @@ function App() {
           )}
         </div>
       </header>
-
-      <div className="filter-row">
-        <div className="filter-dropdown" ref={filterRef}>
-          <button className="filter-trigger" onClick={() => setFilterOpen(!filterOpen)}>
-            <span className="filter-label">
-              {activeFilter === 'all' ? 'All Projects' :
-               activeFilter === 'starred' ? `Starred (${starCount})` :
-               activeFilter}
-            </span>
-            <span className="filter-chevron">{filterOpen ? '\u2303' : '\u2304'}</span>
-          </button>
-          {filterOpen && (
-            <div className="filter-popdown">
-              <button className={`filter-option ${activeFilter === 'all' ? 'active' : ''}`}
-                onClick={() => { setActiveFilter('all'); setFilterOpen(false) }}>
-                {activeFilter === 'all' && <span className="filter-check">{'\u2713'}</span>}
-                All Projects
-                <span className="filter-option-count">{totalProjects}</span>
-              </button>
-              <button className={`filter-option ${activeFilter === 'starred' ? 'active' : ''}`}
-                onClick={() => { setActiveFilter('starred'); setFilterOpen(false) }}>
-                {activeFilter === 'starred' && <span className="filter-check">{'\u2713'}</span>}
-                {'\u2605'} Starred
-                <span className="filter-option-count">{starCount}</span>
-              </button>
-              <div className="filter-pop-divider" />
-              {allCategories.map((name) => {
-                const cat = projectData.categories.find((c) => c.name === name)
-                const count = cat ? cat.projects.length : 0
-                return (
-                  <button key={name}
-                    className={`filter-option ${activeFilter === name ? 'active' : ''}`}
-                    onClick={() => { setActiveFilter(activeFilter === name ? 'all' : name); setFilterOpen(false) }}>
-                    {activeFilter === name && <span className="filter-check">{'\u2713'}</span>}
-                    <span className="filter-option-icon">{cat?.icon}</span>
-                    {name}
-                    <span className="filter-option-count">{count}</span>
-                  </button>
-                )
-              })}
-            </div>
-          )}
-        </div>
-        {activeFilter !== 'all' && (
-          <span className="filter-active-info">
-            {visibleProjects} of {totalProjects}
-            <button className="clear-filter" onClick={() => { setActiveFilter('all'); setSearch('') }}>
-              Clear
-            </button>
-          </span>
-        )}
-      </div>
 
       {/* Starred view: flat list with drag-and-drop */}
       {activeFilter === 'starred' && (
