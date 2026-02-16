@@ -1,6 +1,35 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import projectData from './projects.json'
 import './App.css'
+
+function useDraggable() {
+  const [pos, setPos] = useState({ x: 0, y: 0 })
+  const dragging = useRef(false)
+  const offset = useRef({ x: 0, y: 0 })
+
+  const onMouseDown = useCallback((e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return
+    dragging.current = true
+    offset.current = { x: e.clientX - pos.x, y: e.clientY - pos.y }
+    e.preventDefault()
+
+    const onMouseMove = (e) => {
+      if (!dragging.current) return
+      setPos({ x: e.clientX - offset.current.x, y: e.clientY - offset.current.y })
+    }
+    const onMouseUp = () => {
+      dragging.current = false
+      document.removeEventListener('mousemove', onMouseMove)
+      document.removeEventListener('mouseup', onMouseUp)
+    }
+    document.addEventListener('mousemove', onMouseMove)
+    document.addEventListener('mouseup', onMouseUp)
+  }, [pos.x, pos.y])
+
+  const reset = useCallback(() => setPos({ x: 0, y: 0 }), [])
+
+  return { pos, onMouseDown, reset }
+}
 
 const STORAGE_KEY = 'mission-control-renames'
 const STARS_KEY = 'mission-control-stars'
@@ -16,7 +45,6 @@ const DEFAULT_SETTINGS = {
   showNextSteps: true,
   showStatus: false,
   showPath: false,
-  showIcons: true,
 }
 
 function load(key, fallback) {
@@ -33,29 +61,6 @@ projectData.categories.forEach((cat) =>
 const allCategories = projectData.categories.map((c) => c.name)
 const allProjects = projectData.categories.flatMap((c) => c.projects)
 
-const PROJECT_IMAGES = {
-  1: 'mission-control.jpg',
-  2: 'post-scarcity.svg',
-  3: 'reason-ai.svg',
-  4: 'home-movies.svg',
-  5: 'growing-up.svg',
-  6: 'mapwalk.svg',
-  7: 'digital-twins.svg',
-  8: 'boswell.svg',
-  9: 'dreambuilder.svg',
-  10: 'timewalk-mobile.svg',
-  11: 'timewalk-photo.svg',
-  12: 'videowatcher.svg',
-  13: 'dailybroadcast.svg',
-  14: 'vp-supervisor.svg',
-  15: 'timewalk-avp.svg',
-  16: 'clawd.svg',
-  17: 'manhattan-ai.svg',
-  18: 'moms-health.svg',
-  19: 'olivia-blaine.svg',
-  20: 'willa.svg',
-  21: 'reason-weekend.svg',
-}
 
 function App() {
   const [search, setSearch] = useState('')
@@ -73,6 +78,12 @@ function App() {
   const [addingTodoId, setAddingTodoId] = useState(null)
   const [newTodoText, setNewTodoText] = useState('')
   const [launchDialog, setLaunchDialog] = useState(null)
+  const [newProjectDialog, setNewProjectDialog] = useState(false)
+  const [newProject, setNewProject] = useState({ name: '', path: '', tech: '', status: '' })
+  const settingsDrag = useDraggable()
+  const aboutDrag = useDraggable()
+  const newProjectDrag = useDraggable()
+  const launchDrag = useDraggable()
   const [dragIndex, setDragIndex] = useState(null)
   const [filterOpen, setFilterOpen] = useState(false)
   const searchRef = useRef(null)
@@ -251,11 +262,13 @@ function App() {
     if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); setAddingTodoId(null) }
   }
 
+  const expandPath = (p) => p.replace(/^~/, '/Users/tedbarnett')
+
   // Launch dialog — just cd + claude, todos synced separately
   const openLaunchDialog = (e, project) => {
     e.stopPropagation()
     if (!project.path) return
-    setLaunchDialog({ project, command: `cd "${project.path}" && claude` })
+    setLaunchDialog({ project, command: `cd "${expandPath(project.path)}" && claude` })
   }
 
   const copyLaunchCmd = () => {
@@ -305,7 +318,7 @@ function App() {
 
   const handleCardClick = (project) => {
     if (!project.path) return
-    setLaunchDialog({ project, command: `cd "${project.path}" && claude` })
+    setLaunchDialog({ project, command: `cd "${expandPath(project.path)}" && claude` })
   }
 
   const liveProjects = allProjects.filter((p) => p.url)
@@ -381,12 +394,6 @@ function App() {
         onDrop={draggable ? (e) => handleDrop(e, index) : undefined}
         onDragEnd={draggable ? handleDragEnd : undefined}
       >
-        {(settings.showIcons ?? true) && PROJECT_IMAGES[project.id] && (
-          <div
-            className="card-bg-image"
-            style={{ backgroundImage: `url(/images/${PROJECT_IMAGES[project.id]})` }}
-          />
-        )}
         <div className="card-top">
           {editingId === project.id ? (
             <input ref={editRef} className="rename-input" value={editValue}
@@ -404,7 +411,11 @@ function App() {
             {project.url && (
               <a className="live-link" href={project.url} target="_blank" rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()} title={project.url}>
-                {'\u2197'}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
               </a>
             )}
             <button className={`star-btn ${isStarred(project.id) ? 'starred' : ''}`}
@@ -412,7 +423,6 @@ function App() {
               title={isStarred(project.id) ? 'Unstar' : 'Star'}>
               {isStarred(project.id) ? '\u2605' : '\u2606'}
             </button>
-            <span className="project-id">#{project.id}</span>
           </div>
         </div>
 
@@ -478,19 +488,41 @@ function App() {
   return (
     <>
       <header className="header">
-        <div className="header-left">
-          <h1>Mission Control</h1>
+        <div className="header-left" ref={menuRef}>
+          <button
+            className="hamburger"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Menu"
+          >
+            <span /><span /><span />
+          </button>
+          {menuOpen && (
+            <div className="dropdown-menu">
+              <button className="menu-item menu-nav" onClick={() => { setNewProjectDialog(true); setMenuOpen(false) }}>
+                New Project
+              </button>
+              <button className="menu-item menu-nav" onClick={() => { setMenuTab('settings'); setMenuOpen(false) }}>
+                Settings
+              </button>
+              <button className="menu-item menu-nav" onClick={() => { setMenuTab('about'); setMenuOpen(false) }}>
+                About
+              </button>
+            </div>
+          )}
         </div>
         <div className="header-center">
-          <div className="filter-dropdown" ref={filterRef}>
+          <h1>My Projects</h1>
+        </div>
+        <div className="header-right" ref={filterRef}>
+          <div className="filter-dropdown">
             <button className="filter-trigger" onClick={() => setFilterOpen(!filterOpen)}>
+              <span className="filter-chevron">{filterOpen ? '\u2303' : '\u2304'}</span>
               <span className="filter-label">
                 {search ? `Search: ${search}` :
                  activeFilter === 'all' ? 'All Projects' :
                  activeFilter === 'starred' ? `Starred (${starCount})` :
                  activeFilter}
               </span>
-              <span className="filter-chevron">{filterOpen ? '\u2303' : '\u2304'}</span>
             </button>
             {filterOpen && (
               <div className="filter-popdown">
@@ -538,100 +570,6 @@ function App() {
             )}
           </div>
         </div>
-        <div className="header-right" ref={menuRef}>
-          <button
-            className="hamburger"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Menu"
-          >
-            <span /><span /><span />
-          </button>
-          {menuOpen && (
-            <div className="dropdown-menu">
-              <button className="menu-item menu-nav" onClick={() => setMenuTab(menuTab === 'settings' ? null : 'settings')}>
-                {'\u2699'} Settings
-                <span className="menu-arrow">{menuTab === 'settings' ? '\u2303' : '\u2304'}</span>
-              </button>
-              {menuTab === 'settings' && (
-                <div className="menu-panel">
-                  <div className="menu-section">Content Scale</div>
-                  <div className="setting-row">
-                    <input type="range" min="70" max="130" value={settings.contentScale ?? 100}
-                      onChange={(e) => updateSetting('contentScale', Number(e.target.value))}
-                      className="setting-slider" />
-                    <span className="setting-value">{settings.contentScale ?? 100}%</span>
-                  </div>
-                  <div className="menu-section">Card Tint</div>
-                  <div className="setting-row">
-                    <input type="range" min="0" max="40" value={settings.tintOpacity}
-                      onChange={(e) => updateSetting('tintOpacity', Number(e.target.value))}
-                      className="setting-slider" />
-                    <span className="setting-value">{settings.tintOpacity}%</span>
-                  </div>
-                  <div className="menu-section">Show on Cards</div>
-                  {[
-                    { key: 'showIcons', label: 'Background Image' },
-                    { key: 'showNextSteps', label: 'Next Steps' },
-                    { key: 'showTodos', label: 'To-do List' },
-                    { key: 'showTags', label: 'Tech Tags' },
-                    { key: 'showStatus', label: 'Status' },
-                    { key: 'showPath', label: 'Path' },
-                  ].map(({ key, label }) => (
-                    <label key={key} className="setting-toggle">
-                      <input type="checkbox" checked={settings[key] ?? DEFAULT_SETTINGS[key]}
-                        onChange={(e) => updateSetting(key, e.target.checked)} />
-                      <span className="toggle-track"><span className="toggle-thumb" /></span>
-                      {label}
-                    </label>
-                  ))}
-                  <div className="menu-divider" />
-                  <button className="menu-item" onClick={syncTodos}>
-                    {'\u{1F504}'} Sync Todos to Projects
-                  </button>
-                  <button className="menu-item" onClick={() => {
-                    setSettings(DEFAULT_SETTINGS)
-                    save(SETTINGS_KEY, DEFAULT_SETTINGS)
-                    showToast('Settings reset')
-                  }}>Reset to defaults</button>
-                </div>
-              )}
-
-              <button className="menu-item menu-nav" onClick={() => setMenuTab(menuTab === 'links' ? null : 'links')}>
-                {'\u{1F517}'} Links
-                <span className="menu-arrow">{menuTab === 'links' ? '\u2303' : '\u2304'}</span>
-              </button>
-              {menuTab === 'links' && (
-                <div className="menu-panel">
-                  {liveProjects.map((p) => (
-                    <a key={p.id} className="menu-item" href={p.url} target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}>
-                      {p.name}
-                      <span className="menu-arrow">{'\u2197'}</span>
-                    </a>
-                  ))}
-                </div>
-              )}
-
-              <button className="menu-item menu-nav" onClick={() => setMenuTab(menuTab === 'about' ? null : 'about')}>
-                {'\u2139'} About
-                <span className="menu-arrow">{menuTab === 'about' ? '\u2303' : '\u2304'}</span>
-              </button>
-              {menuTab === 'about' && (
-                <div className="menu-panel about-panel">
-                  <div className="about-title">Mission Control</div>
-                  <div className="about-text">
-                    A project dashboard built by <strong>Ted Barnett</strong> and <strong>Claude Code</strong> (Anthropic).
-                  </div>
-                  <div className="about-text">
-                    Manage, launch, and track all your projects from one place. Todos sync directly to each project's CLAUDE.md for seamless AI-assisted development.
-                  </div>
-                  <div className="about-meta">
-                    React 19 + Vite &middot; {totalProjects} projects &middot; {projectData.lastUpdated}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
       </header>
 
       {/* Starred view: flat list with drag-and-drop */}
@@ -673,12 +611,58 @@ function App() {
       )}
 
       {/* Launch dialog */}
+      {newProjectDialog && (
+        <div className="dialog-overlay" onClick={() => { setNewProjectDialog(false); newProjectDrag.reset() }}>
+          <div className="dialog new-project-dialog" onClick={(e) => e.stopPropagation()}
+            style={{ transform: `translate(${newProjectDrag.pos.x}px, ${newProjectDrag.pos.y}px)` }}>
+            <div className="dialog-header draggable-header" onMouseDown={newProjectDrag.onMouseDown}>
+              <span className="dialog-title">New Project</span>
+              <button className="dialog-close" onClick={() => { setNewProjectDialog(false); newProjectDrag.reset() }}>&times;</button>
+            </div>
+            <div className="new-project-form">
+              <label className="new-project-label">
+                Name
+                <input type="text" value={newProject.name}
+                  onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
+                  placeholder="Project Name" />
+              </label>
+              <label className="new-project-label">
+                Path
+                <input type="text" value={newProject.path}
+                  onChange={(e) => setNewProject({ ...newProject, path: e.target.value })}
+                  placeholder="~/path/to/project" />
+              </label>
+              <label className="new-project-label">
+                Tech (comma-separated)
+                <input type="text" value={newProject.tech}
+                  onChange={(e) => setNewProject({ ...newProject, tech: e.target.value })}
+                  placeholder="React, Node.js" />
+              </label>
+              <label className="new-project-label">
+                Status
+                <input type="text" value={newProject.status}
+                  onChange={(e) => setNewProject({ ...newProject, status: e.target.value })}
+                  placeholder="Current status" />
+              </label>
+            </div>
+            <div className="dialog-actions">
+              <button className="dialog-copy" onClick={() => {
+                showToast(`Scan for new projects (coming soon)`)
+                setNewProjectDialog(false)
+              }}>Scan for New Projects</button>
+              <button className="dialog-cancel" onClick={() => setNewProjectDialog(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {launchDialog && (
-        <div className="dialog-overlay" onClick={() => setLaunchDialog(null)}>
-          <div className="dialog" onClick={(e) => e.stopPropagation()}>
-            <div className="dialog-header">
+        <div className="dialog-overlay" onClick={() => { setLaunchDialog(null); launchDrag.reset() }}>
+          <div className="dialog" onClick={(e) => e.stopPropagation()}
+            style={{ transform: `translate(${launchDrag.pos.x}px, ${launchDrag.pos.y}px)` }}>
+            <div className="dialog-header draggable-header" onMouseDown={launchDrag.onMouseDown}>
               <span className="dialog-title">Launch {getName(launchDialog.project)}</span>
-              <button className="dialog-close" onClick={() => setLaunchDialog(null)}>&times;</button>
+              <button className="dialog-close" onClick={() => { setLaunchDialog(null); launchDrag.reset() }}>&times;</button>
             </div>
             <textarea
               ref={cmdRef}
@@ -691,6 +675,81 @@ function App() {
             <div className="dialog-actions">
               <button className="dialog-copy" onClick={copyLaunchCmd}>Copy & Close</button>
               <button className="dialog-cancel" onClick={() => setLaunchDialog(null)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {menuTab === 'settings' && (
+        <div className="dialog-overlay" onClick={() => { setMenuTab(null); settingsDrag.reset() }}>
+          <div className="dialog dialog-narrow" onClick={(e) => e.stopPropagation()}
+            style={{ transform: `translate(${settingsDrag.pos.x}px, ${settingsDrag.pos.y}px)` }}>
+            <div className="dialog-header draggable-header" onMouseDown={settingsDrag.onMouseDown}>
+              <span className="dialog-title">Settings</span>
+              <button className="dialog-close" onClick={() => { setMenuTab(null); settingsDrag.reset() }}>&times;</button>
+            </div>
+            <div className="settings-panel">
+              <div className="menu-section">Content Scale</div>
+              <div className="setting-row">
+                <input type="range" min="70" max="130" value={settings.contentScale ?? 100}
+                  onChange={(e) => updateSetting('contentScale', Number(e.target.value))}
+                  className="setting-slider" />
+                <span className="setting-value">{settings.contentScale ?? 100}%</span>
+              </div>
+              <div className="menu-section">Card Tint</div>
+              <div className="setting-row">
+                <input type="range" min="0" max="40" value={settings.tintOpacity}
+                  onChange={(e) => updateSetting('tintOpacity', Number(e.target.value))}
+                  className="setting-slider" />
+                <span className="setting-value">{settings.tintOpacity}%</span>
+              </div>
+              <div className="menu-section">Show on Cards</div>
+              {[
+                { key: 'showNextSteps', label: 'Next Steps' },
+                { key: 'showTodos', label: 'To-do List' },
+                { key: 'showTags', label: 'Tech Tags' },
+                { key: 'showStatus', label: 'Status' },
+                { key: 'showPath', label: 'Path' },
+              ].map(({ key, label }) => (
+                <label key={key} className="setting-toggle">
+                  <input type="checkbox" checked={settings[key] ?? DEFAULT_SETTINGS[key]}
+                    onChange={(e) => updateSetting(key, e.target.checked)} />
+                  <span className="toggle-track"><span className="toggle-thumb" /></span>
+                  {label}
+                </label>
+              ))}
+              <div className="menu-divider" />
+              <button className="menu-item" onClick={syncTodos}>
+                Sync Todos to Projects
+              </button>
+              <button className="menu-item" onClick={() => {
+                setSettings(DEFAULT_SETTINGS)
+                save(SETTINGS_KEY, DEFAULT_SETTINGS)
+                showToast('Settings reset')
+              }}>Reset to defaults</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {menuTab === 'about' && (
+        <div className="dialog-overlay" onClick={() => { setMenuTab(null); aboutDrag.reset() }}>
+          <div className="dialog" onClick={(e) => e.stopPropagation()}
+            style={{ transform: `translate(${aboutDrag.pos.x}px, ${aboutDrag.pos.y}px)` }}>
+            <div className="dialog-header draggable-header" onMouseDown={aboutDrag.onMouseDown}>
+              <span className="dialog-title">About</span>
+              <button className="dialog-close" onClick={() => { setMenuTab(null); aboutDrag.reset() }}>&times;</button>
+            </div>
+            <div className="settings-panel">
+              <div className="about-text">
+                A project dashboard built by <strong>Ted Barnett</strong> and <strong>Claude Code</strong> (Anthropic).
+              </div>
+              <div className="about-text">
+                Manage, launch, and track all your projects from one place. Todos sync directly to each project's CLAUDE.md for seamless AI-assisted development.
+              </div>
+              <div className="about-meta">
+                React 19 + Vite &middot; {totalProjects} projects &middot; {projectData.lastUpdated}
+              </div>
             </div>
           </div>
         </div>
