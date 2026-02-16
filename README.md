@@ -8,13 +8,20 @@ Mission Control gives you a single-page overview of all your active projects wit
 
 - **Project cards** organized by category (Production, Very Active, Active, Maintained, Experimental, Life & Ongoing)
 - **Per-project to-do lists** that sync to each project's `CLAUDE.md` so Claude picks them up automatically
-- **One-click launch** — click a card or its "next steps" to open a dialog with a pre-filled terminal command (`cd <project> && claude`)
-- **Starred favorites** — star projects for quick access in a flat, drag-and-drop reorderable view
-- **Search and filter** — find projects by name, status, tech stack, or to-do items; filter by category or stars
-- **Live site links** — cards with deployed URLs show a direct link icon
+- **One-click launch** — click a card or its "next steps" to open a dialog with an editable, pre-filled terminal command (`cd <project> && claude`). Command text is auto-focused for quick copy.
+- **Starred favorites** — star projects for quick access in a flat, drag-and-drop reorderable view (no category grouping)
+- **Compact filter dropdown** — filter by All, Starred, or any category via a popdown menu with checkmarks and project counts
+- **Search** — find projects by name, status, tech stack, or to-do items
+- **Live site links** — cards with deployed URLs show a clickable external link icon
 - **Glassmorphic UI** — tinted card backgrounds per category with adjustable opacity
-- **Background images** — each card has a themed SVG illustration reflecting the project's nature
-- **Customizable settings** — content scale, card tint opacity, toggle which fields appear on cards
+- **Themed background images** — each card has an SVG illustration (or screenshot) reflecting the project, displayed as a faint fill
+- **Customizable settings** (hamburger menu):
+  - Content scale slider (70%–130%) — scales fonts/icons within cards
+  - Card tint opacity slider (0%–40%)
+  - Toggle card features: background image, next steps, to-do list, tech tags, status, path
+  - Sync Todos to Projects — copies a terminal command that writes all todos into each project's `CLAUDE.md`
+  - Reset to defaults
+- **Responsive** — works on mobile; search shrinks, hamburger stays top-right, cards go single-column
 
 ## How It Works
 
@@ -23,20 +30,22 @@ Mission Control gives you a single-page overview of all your active projects wit
 - **Frontend**: React 19 single-page app (no backend required)
 - **Build tool**: Vite — builds to static `dist/` directory
 - **Data**: Project info lives in `src/projects.json`
-- **Persistence**: Settings, stars, to-dos, and card order are stored in `localStorage`
+- **Persistence**: Settings, stars, to-dos, card renames, and starred order are stored in `localStorage`
 - **Todo sync**: A Node.js script (`write-todos.cjs`) writes dashboard to-dos into each project's `CLAUDE.md` between managed markers (`<!-- MC-TODOS-START -->` / `<!-- MC-TODOS-END -->`)
+- **CSS custom properties**: `--tint-opacity`, `--tint-hover-opacity`, `--content-scale` are set from React state for real-time settings updates
 
 ### Key Files
 
 ```
 src/
   App.jsx          Main React component — all UI logic
-  App.css          All styles (glassmorphic cards, dialog, drag-and-drop, etc.)
+  App.css          All styles (glassmorphic cards, dialog, drag-and-drop, responsive, etc.)
   projects.json    Project data (categories, names, paths, tech, todos)
   index.css        Global CSS variables and theme
+  main.jsx         React entry point
 
 public/
-  images/          Background images (SVGs + screenshots) for each project card
+  images/          Background images (21 themed SVGs + Mission Control screenshot)
 
 write-todos.cjs    Node.js script to sync todos into project CLAUDE.md files
 launch.sh          Build-and-serve script (port 3333)
@@ -45,15 +54,15 @@ launch.sh          Build-and-serve script (port 3333)
 ### Todo Sync Flow
 
 1. Edit to-dos directly on any project card in the dashboard
-2. Click **Sync Todos to Projects** in the Settings menu
+2. Click **Sync Todos to Projects** in the Settings menu (hamburger > Settings)
 3. Paste the copied command in your terminal — it writes to-dos into each project's `CLAUDE.md`
 4. When you launch Claude in that project folder, it automatically sees the priorities
 
 ### Launch Flow
 
-1. Click a project card (or its "next steps" line)
-2. A dialog opens with `cd "<project-path>" && claude`
-3. Edit the command if needed, then click **Copy & Close**
+1. Click a project card (or its green "next steps" line)
+2. A dialog opens with `cd "<project-path>" && claude` — text is auto-focused and selected
+3. Edit the command if needed, then click **Copy & Close** (or press Esc to cancel)
 4. Paste into your terminal
 
 ## Getting Started
@@ -87,6 +96,12 @@ Edit `src/projects.json` to add or modify projects. Each project has:
   "todos": ["Default todo item"]
 }
 ```
+
+Add a matching background image in `public/images/` and map it in the `PROJECT_IMAGES` object in `App.jsx`.
+
+## GitHub
+
+Repository: [tedbarnett/mission-control](https://github.com/tedbarnett/mission-control)
 
 ## Built With
 
