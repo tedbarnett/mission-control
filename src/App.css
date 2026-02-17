@@ -967,8 +967,13 @@
   transition: opacity 0.15s;
 }
 
+.project-card:hover .todo-text {
+  color: #ffffff;
+}
+
 .project-card:hover .todo-add-btn {
   opacity: 1;
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .todo-add-btn:hover {
