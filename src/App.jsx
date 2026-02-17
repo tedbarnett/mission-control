@@ -553,7 +553,7 @@ function App() {
         )}
 
         {settings.showTodos && (
-          <div className="todo-list" onClick={(e) => e.stopPropagation()}>
+          <div className="todo-list">
             {todos.map((todo, i) => (
               <div key={i} className="todo-item">
                 <span className="todo-bullet" />
