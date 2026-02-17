@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import fs from 'fs'
-import { execFile } from 'child_process'
+import { execFile, spawn } from 'child_process'
 import { homedir } from 'os'
 import { join } from 'path'
 
@@ -46,6 +46,25 @@ function localApiPlugin() {
             res.statusCode = 404
             res.end(JSON.stringify({ error: 'Project not found in terminal-colors.sh' }))
           }
+        } catch (err) {
+          res.statusCode = 500
+          res.end(JSON.stringify({ error: err.message }))
+        }
+      })
+
+      // Launch a server command in the background (detached)
+      server.middlewares.use('/api/launch-server', async (req, res) => {
+        if (req.method !== 'POST') { res.statusCode = 405; res.end('Method not allowed'); return }
+        try {
+          const { command } = await readJsonBody(req)
+          const expanded = command.replace(/^~/, homedir())
+          const child = spawn('zsh', ['-lc', expanded], {
+            detached: true,
+            stdio: 'ignore',
+          })
+          child.unref()
+          res.setHeader('Content-Type', 'application/json')
+          res.end(JSON.stringify({ ok: true, pid: child.pid }))
         } catch (err) {
           res.statusCode = 500
           res.end(JSON.stringify({ error: err.message }))

@@ -350,6 +350,20 @@ function App() {
     setLaunchDialog(null)
   }
 
+  // Handle link clicks — launch server first if project has one
+  const handleLinkClick = (e, project) => {
+    if (!project.server) return // no server needed, let the <a> navigate normally
+    e.preventDefault()
+    showToast(`Starting ${getName(project)} server...`)
+    fetch('/api/launch-server', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ command: project.server }),
+    })
+      .then(() => setTimeout(() => window.open(project.url, '_blank'), 2000))
+      .catch(() => window.open(project.url, '_blank'))
+  }
+
   // Sync all todos to CLAUDE.md files via a terminal command
   const syncTodos = () => {
     const todosMap = {}
@@ -482,7 +496,7 @@ function App() {
           <div className="card-top-right">
             {project.url && (
               <a className="live-link" href={project.url} target="_blank" rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()} title={project.url}>
+                onClick={(e) => { e.stopPropagation(); handleLinkClick(e, project) }} title={project.url}>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                   <polyline points="15 3 21 3 21 9" />

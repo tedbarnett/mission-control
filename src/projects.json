@@ -50,6 +50,8 @@
           "tech": ["Flask", "Whisper", "DeepFace", "PostgreSQL"],
           "status": "Transcription + face recognition pipeline",
           "nextSteps": "Webapp refinement, face recognition accuracy",
+          "url": "http://127.0.0.1:5001",
+          "server": "cd ~/Github/Home_Movies && python -m home_movies.webapp",
           "todos": ["Improve face clustering accuracy", "Web UI polish", "Batch processing pipeline"]
         },
         {
