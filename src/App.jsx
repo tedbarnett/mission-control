@@ -37,6 +37,26 @@ const SETTINGS_KEY = 'mission-control-settings'
 const TODOS_KEY = 'mission-control-user-todos'
 const STAR_ORDER_KEY = 'mission-control-star-order'
 
+const TERMINAL_COLORS = {
+  'Mission Control': '#d1d1ff',
+  'Post-Scarcity': '#d1ffd1',
+  'Reason AI': '#ffd1d1',
+  'Home Movies': '#ffe9d1',
+  'Growing Up': '#d1ffe9',
+  'MapWalk iOS': '#d1e6ff',
+  'Digital Twins — Neil': '#ffd1e9',
+  'Boswell': '#e9d1ff',
+  'DreamBuilder iOS': '#d1ffdc',
+  'TimeWalk Mobile': '#dcffd1',
+  'TimeWalk Photo': '#fffcd1',
+  'VideoWatcher': '#ffd7e1',
+  'DailyBroadcast': '#d1f5ff',
+  'VP Supervisor': '#ffe6d1',
+  'TimeWalk AVP': '#dcd1ff',
+  'Clawd': '#ebffd1',
+  'Manhattan AI': '#d1ffff',
+}
+
 const DEFAULT_SETTINGS = {
   tintOpacity: 18,
   contentScale: 100,
@@ -45,6 +65,7 @@ const DEFAULT_SETTINGS = {
   showNextSteps: true,
   showStatus: false,
   showPath: false,
+  terminalColors: false,
 }
 
 function load(key, fallback) {
@@ -384,8 +405,8 @@ function App() {
     return (
       <div
         key={project.id}
-        className={`project-card ${dragIndex === index && draggable ? 'dragging' : ''}`}
-        style={{ '--accent-color': category.color }}
+        className={`project-card ${dragIndex === index && draggable ? 'dragging' : ''} ${settings.terminalColors && TERMINAL_COLORS[project.name] ? 'terminal-mode' : ''}`}
+        style={{ '--accent-color': settings.terminalColors && TERMINAL_COLORS[project.name] ? TERMINAL_COLORS[project.name] : category.color }}
         onClick={() => handleCardClick(project)}
         title={project.path ? 'Click to launch' : ''}
         draggable={draggable}
@@ -703,6 +724,12 @@ function App() {
                   className="setting-slider" />
                 <span className="setting-value">{settings.tintOpacity}%</span>
               </div>
+              <label className="setting-toggle">
+                <input type="checkbox" checked={settings.terminalColors ?? false}
+                  onChange={(e) => updateSetting('terminalColors', e.target.checked)} />
+                <span className="toggle-track"><span className="toggle-thumb" /></span>
+                Terminal Colors
+              </label>
               <div className="menu-section">Show on Cards</div>
               {[
                 { key: 'showNextSteps', label: 'Next Steps' },

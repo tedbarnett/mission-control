@@ -9,7 +9,7 @@
         {
           "id": 1,
           "name": "Mission Control",
-          "path": "~/.claude/dashboard",
+          "path": "~/Github/mission-control",
           "tech": ["React 19", "Vite", "localhost:3333"],
           "status": "Project dashboard for Claude Code",
           "nextSteps": "Enhancements, deploy option",

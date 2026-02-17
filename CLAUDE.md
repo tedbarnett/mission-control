@@ -8,7 +8,7 @@ Mission Control is a React 19 + Vite dashboard at `~/.claude/dashboard/` that ma
 - `src/App.jsx` — all UI logic (single component)
 - `src/App.css` — all styles (glassmorphic cards, responsive, dialog, drag-and-drop)
 - `src/projects.json` — project data (categories, paths, tech, todos, URLs)
-- `public/images/` — 21 themed SVG backgrounds + Mission Control screenshot
+- `public/images/` — Mission Control screenshot
 - `write-todos.cjs` — Node.js (CommonJS, not ESM!) script to sync todos into CLAUDE.md files
 - CSS custom properties (`--tint-opacity`, `--content-scale`) driven by React state via `useEffect`
 
@@ -18,7 +18,7 @@ Mission Control is a React 19 + Vite dashboard at `~/.claude/dashboard/` that ma
 - Card backgrounds use `color-mix(in srgb, ...)` for glassmorphic tints
 - Use Unicode escapes (`'\u2197'`) not HTML entities (`&nearr;`) in JSX
 - Todo sync uses markers `<!-- MC-TODOS-START -->` / `<!-- MC-TODOS-END -->` in each project's CLAUDE.md
-- Background images are mapped by project ID in `PROJECT_IMAGES` object
+- Terminal colors are mapped by project name in `TERMINAL_COLORS` object (matches `proj` shell colors)
 - Filter is a compact dropdown (not a button bar)
 - Starred view is a flat drag-and-drop list (no category grouping)
 

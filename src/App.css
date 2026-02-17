@@ -649,6 +649,11 @@
   transform: translate(2px, -2px);
 }
 
+/* Terminal color mode — boost saturation for pastel colors on dark theme */
+.project-card.terminal-mode .next-steps { filter: saturate(2) brightness(0.9); }
+.project-card.terminal-mode::before { filter: saturate(1.5); }
+.project-card.terminal-mode .todo-bullet { filter: saturate(1.5); }
+
 /* Drag-and-drop */
 .project-card.dragging {
   opacity: 0.4;
