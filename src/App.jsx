@@ -335,6 +335,22 @@ function App() {
     setLaunchDialog(null)
   }
 
+  const launchInTerminal = () => {
+    if (!launchDialog) return
+    fetch('/api/launch-terminal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ command: launchDialog.command }),
+    })
+      .then((r) => r.json())
+      .then(() => showToast('Launched in Terminal'))
+      .catch(() => {
+        navigator.clipboard.writeText(launchDialog.command)
+        showToast('Fallback: copied to clipboard')
+      })
+    setLaunchDialog(null)
+  }
+
   // Sync all todos to CLAUDE.md files via a terminal command
   const syncTodos = () => {
     const todosMap = {}
@@ -747,7 +763,8 @@ function App() {
               spellCheck={false}
             />
             <div className="dialog-actions">
-              <button className="dialog-copy" onClick={copyLaunchCmd}>Copy & Close</button>
+              <button className="dialog-launch" onClick={launchInTerminal}>Launch</button>
+              <button className="dialog-copy" onClick={copyLaunchCmd}>Copy</button>
               <button className="dialog-cancel" onClick={() => setLaunchDialog(null)}>Cancel</button>
             </div>
           </div>

@@ -815,8 +815,8 @@
   margin-top: 0.75rem;
 }
 
-.dialog-copy {
-  background: #3b82f6;
+.dialog-launch {
+  background: #10b981;
   color: white;
   border: none;
   border-radius: 6px;
@@ -828,8 +828,26 @@
   transition: background 0.15s;
 }
 
+.dialog-launch:hover {
+  background: #059669;
+}
+
+.dialog-copy {
+  background: none;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.4rem 1rem;
+  font-size: 0.75rem;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
 .dialog-copy:hover {
-  background: #2563eb;
+  color: var(--text-primary);
+  border-color: var(--text-muted);
 }
 
 .dialog-cancel {
