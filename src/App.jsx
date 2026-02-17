@@ -165,7 +165,6 @@ function App() {
   useEffect(() => {
     if (launchDialog && cmdRef.current) {
       cmdRef.current.focus()
-      cmdRef.current.select()
     }
   }, [launchDialog])
 
@@ -754,18 +753,9 @@ function App() {
                 </button>
               )}
             </div>
-            <textarea
-              ref={cmdRef}
-              className="dialog-cmd"
-              value={launchDialog.command}
-              onChange={(e) => setLaunchDialog({ ...launchDialog, command: e.target.value })}
-              rows={3}
-              spellCheck={false}
-            />
             <div className="dialog-actions">
-              <button className="dialog-launch" onClick={launchInTerminal}>Launch</button>
+              <button ref={cmdRef} className="dialog-launch dialog-launch-big" onClick={launchInTerminal}>Launch</button>
               <button className="dialog-copy" onClick={copyLaunchCmd}>Copy</button>
-              <button className="dialog-cancel" onClick={() => setLaunchDialog(null)}>Cancel</button>
             </div>
           </div>
         </div>

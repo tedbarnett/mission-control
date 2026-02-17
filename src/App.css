@@ -832,6 +832,12 @@
   background: #059669;
 }
 
+.dialog-launch-big {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  font-size: 0.85rem;
+}
+
 .dialog-copy {
   background: none;
   color: var(--text-secondary);
