@@ -36,6 +36,7 @@ const STARS_KEY = 'mission-control-stars'
 const SETTINGS_KEY = 'mission-control-settings'
 const TODOS_KEY = 'mission-control-user-todos'
 const STAR_ORDER_KEY = 'mission-control-star-order'
+const CUSTOM_COLORS_KEY = 'mission-control-custom-colors'
 
 const TERMINAL_COLORS = {
   'Mission Control': '#d1d1ff',
@@ -91,6 +92,7 @@ function App() {
   const [settings, setSettings] = useState(() => load(SETTINGS_KEY, DEFAULT_SETTINGS))
   const [userTodos, setUserTodos] = useState(() => load(TODOS_KEY, {}))
   const [starOrder, setStarOrder] = useState(() => load(STAR_ORDER_KEY, []))
+  const [customColors, setCustomColors] = useState(() => load(CUSTOM_COLORS_KEY, {}))
   const [editingId, setEditingId] = useState(null)
   const [editValue, setEditValue] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
@@ -285,6 +287,25 @@ function App() {
 
   const expandPath = (p) => p.replace(/^~/, '/Users/tedbarnett')
 
+  const setProjectColor = (id, color) => {
+    const next = { ...customColors, [id]: color }
+    setCustomColors(next)
+    save(CUSTOM_COLORS_KEY, next)
+  }
+
+  const clearProjectColor = (id) => {
+    const next = { ...customColors }
+    delete next[id]
+    setCustomColors(next)
+    save(CUSTOM_COLORS_KEY, next)
+  }
+
+  const getResolvedColor = (project, category) => {
+    if (customColors[project.id]) return customColors[project.id]
+    if (settings.terminalColors && TERMINAL_COLORS[project.name]) return TERMINAL_COLORS[project.name]
+    return category.color
+  }
+
   // Launch dialog — just cd + claude, todos synced separately
   const openLaunchDialog = (e, project) => {
     e.stopPropagation()
@@ -311,6 +332,24 @@ function App() {
     const cmd = `echo '${escaped}' | node ~/.claude/dashboard/write-todos.cjs --sync-all`
     navigator.clipboard.writeText(cmd)
     showToast('Sync command copied — paste in terminal')
+  }
+
+  // Sync custom colors to terminal-colors.sh
+  const syncColors = () => {
+    const lines = []
+    allProjects.forEach((p) => {
+      const color = customColors[p.id]
+      if (!color) return
+      const hex = color.replace('#', '')
+      const key = p.name.replace(/'/g, "'\\''")
+      lines.push(`sed -i '' "s/\\['${key}'\\]='[^']*'/['${key}']='${hex}'/" ~/.claude/terminal-colors.sh`)
+    })
+    if (lines.length === 0) {
+      showToast('No custom colors to sync')
+      return
+    }
+    navigator.clipboard.writeText(lines.join('\n'))
+    showToast(`${lines.length} color update${lines.length > 1 ? 's' : ''} copied — paste in terminal`)
   }
 
   // Drag-and-drop for starred view
@@ -405,8 +444,8 @@ function App() {
     return (
       <div
         key={project.id}
-        className={`project-card ${dragIndex === index && draggable ? 'dragging' : ''} ${settings.terminalColors && TERMINAL_COLORS[project.name] ? 'terminal-mode' : ''}`}
-        style={{ '--accent-color': settings.terminalColors && TERMINAL_COLORS[project.name] ? TERMINAL_COLORS[project.name] : category.color }}
+        className={`project-card ${dragIndex === index && draggable ? 'dragging' : ''} ${customColors[project.id] || (settings.terminalColors && TERMINAL_COLORS[project.name]) ? 'terminal-mode' : ''}`}
+        style={{ '--accent-color': getResolvedColor(project, category) }}
         onClick={() => handleCardClick(project)}
         title={project.path ? 'Click to launch' : ''}
         draggable={draggable}
@@ -685,6 +724,23 @@ function App() {
               <span className="dialog-title">Launch {getName(launchDialog.project)}</span>
               <button className="dialog-close" onClick={() => { setLaunchDialog(null); launchDrag.reset() }}>&times;</button>
             </div>
+            <div className="color-picker-row">
+              <span className="color-picker-label">Card Color</span>
+              <input
+                type="color"
+                className="color-picker-input"
+                value={getResolvedColor(launchDialog.project, getCategoryForProject(launchDialog.project.id))}
+                onChange={(e) => setProjectColor(launchDialog.project.id, e.target.value)}
+              />
+              <span className="color-picker-hex">
+                {getResolvedColor(launchDialog.project, getCategoryForProject(launchDialog.project.id))}
+              </span>
+              {customColors[launchDialog.project.id] && (
+                <button className="color-picker-reset" onClick={() => clearProjectColor(launchDialog.project.id)}>
+                  Reset
+                </button>
+              )}
+            </div>
             <textarea
               ref={cmdRef}
               className="dialog-cmd"
@@ -749,9 +805,14 @@ function App() {
               <button className="menu-item" onClick={syncTodos}>
                 Sync Todos to Projects
               </button>
+              <button className="menu-item" onClick={syncColors}>
+                Sync Colors to Terminal
+              </button>
               <button className="menu-item" onClick={() => {
                 setSettings(DEFAULT_SETTINGS)
                 save(SETTINGS_KEY, DEFAULT_SETTINGS)
+                setCustomColors({})
+                save(CUSTOM_COLORS_KEY, {})
                 showToast('Settings reset')
               }}>Reset to defaults</button>
             </div>
