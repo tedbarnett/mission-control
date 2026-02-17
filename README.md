@@ -17,6 +17,7 @@ Mission Control gives you a single-page overview of all your active projects wit
 - **Live site links** — cards with deployed URLs show a clickable external link icon
 - **Glassmorphic UI** — tinted card backgrounds per category with adjustable opacity
 - **Terminal Colors mode** — toggle in Settings to color each card with its matching terminal background color (from the `proj` shell function)
+- **Per-project color picker** — change any card's color in the launch dialog; automatically syncs to `~/.claude/terminal-colors.sh` so `proj` uses the new color immediately
 - **Customizable settings** (hamburger menu):
   - Content scale slider (70%–130%) — scales fonts/icons within cards
   - Card tint opacity slider (0%–40%)
@@ -33,7 +34,8 @@ Mission Control gives you a single-page overview of all your active projects wit
 - **Frontend**: React 19 single-page app (no backend required)
 - **Build tool**: Vite — builds to static `dist/` directory
 - **Data**: Project info lives in `src/projects.json`; terminal colors are mapped by project name in the `TERMINAL_COLORS` object in `App.jsx`
-- **Persistence**: Settings, stars, to-dos, card renames, and starred order are stored in `localStorage`
+- **Color sync**: A Vite server plugin (`colorSyncPlugin` in `vite.config.js`) exposes `POST /api/update-color` to write color changes directly to `~/.claude/terminal-colors.sh`
+- **Persistence**: Settings, stars, to-dos, card renames, starred order, and custom colors are stored in `localStorage`
 - **Todo sync**: A Node.js script (`write-todos.cjs`) writes dashboard to-dos into each project's `CLAUDE.md` between managed markers (`<!-- MC-TODOS-START -->` / `<!-- MC-TODOS-END -->`)
 - **CSS custom properties**: `--tint-opacity`, `--tint-hover-opacity`, `--content-scale` are set from React state for real-time settings updates
 

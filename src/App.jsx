@@ -287,10 +287,20 @@ function App() {
 
   const expandPath = (p) => p.replace(/^~/, '/Users/tedbarnett')
 
+  const syncColorToTerminal = (name, hex) => {
+    fetch('/api/update-color', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, hex }),
+    }).catch(() => {})
+  }
+
   const setProjectColor = (id, color) => {
     const next = { ...customColors, [id]: color }
     setCustomColors(next)
     save(CUSTOM_COLORS_KEY, next)
+    const project = allProjects.find((p) => p.id === id)
+    if (project) syncColorToTerminal(project.name, color.replace('#', ''))
   }
 
   const clearProjectColor = (id) => {
@@ -298,6 +308,11 @@ function App() {
     delete next[id]
     setCustomColors(next)
     save(CUSTOM_COLORS_KEY, next)
+    // Restore default color in terminal-colors.sh
+    const project = allProjects.find((p) => p.id === id)
+    if (project && TERMINAL_COLORS[project.name]) {
+      syncColorToTerminal(project.name, TERMINAL_COLORS[project.name].replace('#', ''))
+    }
   }
 
   const getResolvedColor = (project, category) => {
@@ -332,24 +347,6 @@ function App() {
     const cmd = `echo '${escaped}' | node ~/.claude/dashboard/write-todos.cjs --sync-all`
     navigator.clipboard.writeText(cmd)
     showToast('Sync command copied — paste in terminal')
-  }
-
-  // Sync custom colors to terminal-colors.sh
-  const syncColors = () => {
-    const lines = []
-    allProjects.forEach((p) => {
-      const color = customColors[p.id]
-      if (!color) return
-      const hex = color.replace('#', '')
-      const key = p.name.replace(/'/g, "'\\''")
-      lines.push(`sed -i '' "s/\\['${key}'\\]='[^']*'/['${key}']='${hex}'/" ~/.claude/terminal-colors.sh`)
-    })
-    if (lines.length === 0) {
-      showToast('No custom colors to sync')
-      return
-    }
-    navigator.clipboard.writeText(lines.join('\n'))
-    showToast(`${lines.length} color update${lines.length > 1 ? 's' : ''} copied — paste in terminal`)
   }
 
   // Drag-and-drop for starred view
@@ -804,9 +801,6 @@ function App() {
               <div className="menu-divider" />
               <button className="menu-item" onClick={syncTodos}>
                 Sync Todos to Projects
-              </button>
-              <button className="menu-item" onClick={syncColors}>
-                Sync Colors to Terminal
               </button>
               <button className="menu-item" onClick={() => {
                 setSettings(DEFAULT_SETTINGS)
