@@ -101,6 +101,7 @@ end tell`
 export default defineConfig({
   plugins: [react(), localApiPlugin()],
   server: {
+    port: 3333,
     proxy: {
       '/ws': {
         target: 'ws://localhost:3333',

@@ -58,6 +58,26 @@ const TERMINAL_COLORS = {
   'Manhattan AI': '#d1ffff',
 }
 
+const TERMINAL_COLORS = {
+  'Mission Control': '#d1d1ff',
+  'Post-Scarcity': '#d1ffd1',
+  'Reason AI': '#ffd1d1',
+  'Home Movies': '#ffe9d1',
+  'Growing Up': '#d1ffe9',
+  'MapWalk iOS': '#d1e6ff',
+  'Digital Twins — Neil': '#ffd1e9',
+  'Boswell': '#e9d1ff',
+  'DreamBuilder iOS': '#d1ffdc',
+  'TimeWalk Mobile': '#dcffd1',
+  'TimeWalk Photo': '#fffcd1',
+  'VideoWatcher': '#ffd7e1',
+  'DailyBroadcast': '#d1f5ff',
+  'VP Supervisor': '#ffe6d1',
+  'TimeWalk AVP': '#dcd1ff',
+  'Clawd': '#ebffd1',
+  'Manhattan AI': '#d1ffff',
+}
+
 const DEFAULT_SETTINGS = {
   tintOpacity: 18,
   contentScale: 100,

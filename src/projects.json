@@ -47,7 +47,7 @@
           "id": 4,
           "name": "Home Movies",
           "path": "~/Github/Home_Movies",
-          "tech": ["Flask", "Whisper", "DeepFace", "PostgreSQL"],
+          "tech": ["Flask", "Whisper", "DeepFace", "SQLite"],
           "status": "Transcription + face recognition pipeline",
           "nextSteps": "Webapp refinement, face recognition accuracy",
           "url": "http://127.0.0.1:5001",
