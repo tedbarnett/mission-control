@@ -1020,6 +1020,174 @@
   width: 100%;
 }
 
+/* Scan dialog */
+.scan-dialog {
+  width: 560px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.scan-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.5rem;
+}
+
+.scan-select-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-size: 0.7rem;
+  font-family: inherit;
+  padding: 0.25rem 0.6rem;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.scan-select-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+.scan-list {
+  overflow-y: auto;
+  max-height: 50vh;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-secondary);
+}
+
+.scan-item {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+
+.scan-item:last-child {
+  border-bottom: none;
+}
+
+.scan-item-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+  transition: background 0.1s;
+}
+
+.scan-item-row:hover {
+  background: var(--bg-card-hover);
+}
+
+.scan-item-selected {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.scan-item-selected .scan-item-row:hover {
+  background: rgba(59, 130, 246, 0.12);
+}
+
+.scan-checkbox {
+  flex-shrink: 0;
+  accent-color: #3b82f6;
+  cursor: pointer;
+}
+
+.scan-dir-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scan-badges {
+  display: flex;
+  gap: 0.3rem;
+  flex-shrink: 0;
+}
+
+.scan-badge {
+  font-size: 0.6rem;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.scan-badge-git {
+  background: rgba(240, 80, 50, 0.15);
+  color: #f06040;
+}
+
+.scan-badge-claude {
+  background: rgba(139, 92, 246, 0.15);
+  color: #a78bfa;
+}
+
+.scan-badge-github {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+
+.scan-badge-dropbox {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.scan-item-config {
+  padding: 0.4rem 0.75rem 0.6rem 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.scan-config-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  flex: 1;
+  min-width: 120px;
+}
+
+.scan-config-field span {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.scan-config-field input,
+.scan-config-field select {
+  padding: 0.3rem 0.4rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  outline: none;
+}
+
+.scan-config-field input:focus,
+.scan-config-field select:focus {
+  border-color: #3b82f6;
+}
+
+.scan-path-display {
+  width: 100%;
+  font-size: 0.65rem;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--text-muted);
+  opacity: 0.7;
+  margin-top: 0.15rem;
+}
+
 /* Toast */
 .toast {
   position: fixed;
@@ -1064,6 +1232,12 @@
   }
   .dialog {
     width: 95vw;
+  }
+  .scan-dialog {
+    width: 95vw;
+  }
+  .scan-item-config {
+    padding-left: 0.75rem;
   }
 }
 

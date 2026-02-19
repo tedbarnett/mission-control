@@ -58,26 +58,6 @@ const TERMINAL_COLORS = {
   'Manhattan AI': '#d1ffff',
 }
 
-const TERMINAL_COLORS = {
-  'Mission Control': '#d1d1ff',
-  'Post-Scarcity': '#d1ffd1',
-  'Reason AI': '#ffd1d1',
-  'Home Movies': '#ffe9d1',
-  'Growing Up': '#d1ffe9',
-  'MapWalk iOS': '#d1e6ff',
-  'Digital Twins — Neil': '#ffd1e9',
-  'Boswell': '#e9d1ff',
-  'DreamBuilder iOS': '#d1ffdc',
-  'TimeWalk Mobile': '#dcffd1',
-  'TimeWalk Photo': '#fffcd1',
-  'VideoWatcher': '#ffd7e1',
-  'DailyBroadcast': '#d1f5ff',
-  'VP Supervisor': '#ffe6d1',
-  'TimeWalk AVP': '#dcd1ff',
-  'Clawd': '#ebffd1',
-  'Manhattan AI': '#d1ffff',
-}
-
 const DEFAULT_SETTINGS = {
   tintOpacity: 18,
   contentScale: 100,
@@ -123,9 +103,13 @@ function App() {
   const [launchDialog, setLaunchDialog] = useState(null)
   const [newProjectDialog, setNewProjectDialog] = useState(false)
   const [newProject, setNewProject] = useState({ name: '', path: '', tech: '', status: '' })
+  const [scanResults, setScanResults] = useState(null)
+  const [scanLoading, setScanLoading] = useState(false)
+  const [scanSelected, setScanSelected] = useState({})
   const settingsDrag = useDraggable()
   const aboutDrag = useDraggable()
   const newProjectDrag = useDraggable()
+  const scanDrag = useDraggable()
   const launchDrag = useDraggable()
   const [dragIndex, setDragIndex] = useState(null)
   const [filterOpen, setFilterOpen] = useState(false)
@@ -158,6 +142,7 @@ function App() {
     const handleKeyDown = (e) => {
       if (editingId || addingTodoId) return
       if (e.key === 'Escape') {
+        if (scanResults) { setScanResults(null); return }
         if (launchDialog) { setLaunchDialog(null); return }
         setSearch('')
         setMenuOpen(false)
@@ -397,6 +382,70 @@ function App() {
     navigator.clipboard.writeText(cmd)
     showToast('Sync command copied — paste in terminal')
   }
+
+  // Scan for new projects
+  const scanForProjects = async () => {
+    setScanLoading(true)
+    setNewProjectDialog(false)
+    try {
+      const res = await fetch('/api/scan-projects')
+      const data = await res.json()
+      if (data.discovered && data.discovered.length > 0) {
+        setScanResults(data.discovered)
+        // Initialize all as unselected with default config
+        const sel = {}
+        data.discovered.forEach((d) => {
+          sel[d.path] = {
+            selected: false,
+            name: d.dirName.replace(/[_-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+            category: d.source === 'dropbox' ? 'Active' : 'Lab',
+            tech: '',
+          }
+        })
+        setScanSelected(sel)
+      } else {
+        showToast('No new projects found')
+      }
+    } catch {
+      showToast('Scan failed')
+    }
+    setScanLoading(false)
+  }
+
+  const addScannedProjects = async () => {
+    const toAdd = Object.entries(scanSelected)
+      .filter(([, cfg]) => cfg.selected)
+      .map(([path, cfg]) => ({
+        name: cfg.name,
+        path,
+        tech: cfg.tech ? cfg.tech.split(',').map((t) => t.trim()).filter(Boolean) : [],
+        status: 'New project',
+        category: cfg.category,
+      }))
+
+    if (toAdd.length === 0) { showToast('Select at least one project'); return }
+
+    try {
+      const res = await fetch('/api/add-projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projects: toAdd }),
+      })
+      const data = await res.json()
+      if (data.ok) {
+        showToast(`Added ${data.added} project${data.added > 1 ? 's' : ''}`)
+        setScanResults(null)
+        // Reload to pick up changes to projects.json (Vite HMR handles it)
+        setTimeout(() => window.location.reload(), 500)
+      } else {
+        showToast('Failed to add projects')
+      }
+    } catch {
+      showToast('Failed to add projects')
+    }
+  }
+
+  const scanSelectedCount = Object.values(scanSelected).filter((c) => c.selected).length
 
   // Drag-and-drop for starred view
   const handleDragStart = (e, index) => {
@@ -752,11 +801,96 @@ function App() {
               </label>
             </div>
             <div className="dialog-actions">
-              <button className="dialog-copy" onClick={() => {
-                showToast(`Scan for new projects (coming soon)`)
-                setNewProjectDialog(false)
-              }}>Scan for New Projects</button>
+              <button className="dialog-copy" onClick={scanForProjects} disabled={scanLoading}>
+                {scanLoading ? 'Scanning...' : 'Scan for New Projects'}
+              </button>
               <button className="dialog-cancel" onClick={() => setNewProjectDialog(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Scan results dialog */}
+      {scanResults && (
+        <div className="dialog-overlay" onClick={() => { setScanResults(null); scanDrag.reset() }}>
+          <div className="dialog scan-dialog" onClick={(e) => e.stopPropagation()}
+            style={{ transform: `translate(${scanDrag.pos.x}px, ${scanDrag.pos.y}px)` }}>
+            <div className="dialog-header draggable-header" onMouseDown={scanDrag.onMouseDown}>
+              <span className="dialog-title">
+                Found {scanResults.length} new director{scanResults.length === 1 ? 'y' : 'ies'}
+              </span>
+              <button className="dialog-close" onClick={() => { setScanResults(null); scanDrag.reset() }}>&times;</button>
+            </div>
+            <div className="scan-controls">
+              <button className="scan-select-btn" onClick={() => {
+                const next = { ...scanSelected }
+                const allSelected = Object.values(next).every((c) => c.selected)
+                Object.keys(next).forEach((k) => { next[k] = { ...next[k], selected: !allSelected } })
+                setScanSelected(next)
+              }}>
+                {Object.values(scanSelected).every((c) => c.selected) ? 'Select None' : 'Select All'}
+              </button>
+            </div>
+            <div className="scan-list">
+              {scanResults.map((item) => {
+                const cfg = scanSelected[item.path] || { selected: false, name: item.dirName, category: 'Lab', tech: '' }
+                return (
+                  <div key={item.path} className={`scan-item ${cfg.selected ? 'scan-item-selected' : ''}`}>
+                    <div className="scan-item-row" onClick={() => {
+                      setScanSelected({ ...scanSelected, [item.path]: { ...cfg, selected: !cfg.selected } })
+                    }}>
+                      <input type="checkbox" checked={cfg.selected} readOnly className="scan-checkbox" />
+                      <span className="scan-dir-name">{item.dirName}</span>
+                      <div className="scan-badges">
+                        {item.hasGit && <span className="scan-badge scan-badge-git">git</span>}
+                        {item.hasClaude && <span className="scan-badge scan-badge-claude">CLAUDE.md</span>}
+                        <span className={`scan-badge scan-badge-${item.source}`}>{item.source}</span>
+                      </div>
+                    </div>
+                    {cfg.selected && (
+                      <div className="scan-item-config">
+                        <label className="scan-config-field">
+                          <span>Name</span>
+                          <input type="text" value={cfg.name}
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(e) => setScanSelected({
+                              ...scanSelected,
+                              [item.path]: { ...cfg, name: e.target.value }
+                            })} />
+                        </label>
+                        <label className="scan-config-field">
+                          <span>Category</span>
+                          <select value={cfg.category}
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(e) => setScanSelected({
+                              ...scanSelected,
+                              [item.path]: { ...cfg, category: e.target.value }
+                            })}>
+                            {allCategories.map((c) => <option key={c} value={c}>{c}</option>)}
+                          </select>
+                        </label>
+                        <label className="scan-config-field">
+                          <span>Tech</span>
+                          <input type="text" value={cfg.tech} placeholder="React, Node.js"
+                            onClick={(e) => e.stopPropagation()}
+                            onChange={(e) => setScanSelected({
+                              ...scanSelected,
+                              [item.path]: { ...cfg, tech: e.target.value }
+                            })} />
+                        </label>
+                        <div className="scan-path-display">{item.path}</div>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+            <div className="dialog-actions">
+              <button className="dialog-launch" onClick={addScannedProjects}
+                disabled={scanSelectedCount === 0}>
+                Add Selected ({scanSelectedCount})
+              </button>
+              <button className="dialog-cancel" onClick={() => { setScanResults(null); scanDrag.reset() }}>Cancel</button>
             </div>
           </div>
         </div>
