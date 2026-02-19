@@ -289,7 +289,7 @@ function App() {
     if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); setAddingTodoId(null) }
   }
 
-  const expandPath = (p) => p.replace(/^~/, '/Users/tedbarnett')
+  const expandPath = (p) => p.replace(/^~/, '$HOME')
 
   const syncColorToTerminal = (name, hex) => {
     fetch('/api/update-color', {
