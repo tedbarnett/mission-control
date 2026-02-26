@@ -56,6 +56,7 @@ const TERMINAL_COLORS = {
   'TimeWalk AVP': '#dcd1ff',
   'Clawd': '#ebffd1',
   'Manhattan AI': '#d1ffff',
+  'Gabriel': '#c4f0d0',
 }
 
 const DEFAULT_SETTINGS = {
