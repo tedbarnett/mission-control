@@ -415,6 +415,27 @@
   gap: 0.4rem;
 }
 
+/* Edit (gear) button */
+.edit-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: calc(0.8rem * var(--content-scale, 1));
+  color: var(--text-muted);
+  padding: 0 0.15rem;
+  transition: color 0.15s, opacity 0.15s;
+  line-height: 1;
+  opacity: 0;
+}
+
+.project-card:hover .edit-btn {
+  opacity: 1;
+}
+
+.edit-btn:hover {
+  color: var(--text-primary);
+}
+
 /* Star button */
 .star-btn {
   background: none;
@@ -808,6 +829,46 @@
   border-color: var(--text-muted);
 }
 
+/* Edit dialog */
+.edit-dialog {
+  width: 440px;
+}
+
+.edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+}
+
+.edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.edit-field input,
+.edit-field textarea,
+.edit-field select {
+  padding: 0.35rem 0.5rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  outline: none;
+  resize: vertical;
+}
+
+.edit-field input:focus,
+.edit-field textarea:focus,
+.edit-field select:focus {
+  border-color: #3b82f6;
+}
+
 .dialog-actions {
   display: flex;
   justify-content: flex-end;
@@ -905,8 +966,49 @@
   outline: none;
 }
 
-.new-project-label input:focus {
+.new-project-label input:focus,
+.new-project-label select:focus {
   border-color: #3b82f6;
+}
+
+.new-project-select {
+  padding: 0.4rem 0.5rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-primary);
+  outline: none;
+}
+
+.new-project-path-row {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.new-project-path-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.browse-btn {
+  flex-shrink: 0;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  font-weight: 500;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.browse-btn:hover {
+  color: var(--text-primary);
+  border-color: var(--text-muted);
 }
 
 /* To-do list */
@@ -1234,6 +1336,9 @@
     width: 95vw;
   }
   .scan-dialog {
+    width: 95vw;
+  }
+  .edit-dialog {
     width: 95vw;
   }
   .scan-item-config {

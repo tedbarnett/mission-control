@@ -197,6 +197,20 @@ function localApiPlugin() {
         }
       })
 
+      // Browse for a directory using macOS native folder picker
+      server.middlewares.use('/api/browse-directory', async (req, res) => {
+        if (req.method !== 'GET') { res.statusCode = 405; res.end('Method not allowed'); return }
+        const script = 'try\nset f to POSIX path of (choose folder with prompt "Select project directory")\nreturn f\non error\nreturn ""\nend try'
+        execFile('osascript', ['-e', script], (err, stdout) => {
+          res.setHeader('Content-Type', 'application/json')
+          if (err) { res.end(JSON.stringify({ path: null })); return }
+          const raw = stdout.trim().replace(/\/$/, '')
+          if (!raw) { res.end(JSON.stringify({ path: null })); return }
+          const path = raw.replace(homedir(), '~')
+          res.end(JSON.stringify({ path }))
+        })
+      })
+
       // Launch a command in a new Terminal.app window
       server.middlewares.use('/api/launch-terminal', async (req, res) => {
         if (req.method !== 'POST') { res.statusCode = 405; res.end('Method not allowed'); return }

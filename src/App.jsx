@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import projectData from './projects.json'
 import './App.css'
 
@@ -8,7 +8,7 @@ function useDraggable() {
   const offset = useRef({ x: 0, y: 0 })
 
   const onMouseDown = useCallback((e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON') return
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'BUTTON' || e.target.tagName === 'SELECT') return
     dragging.current = true
     offset.current = { x: e.clientX - pos.x, y: e.clientY - pos.y }
     e.preventDefault()
@@ -37,6 +37,7 @@ const SETTINGS_KEY = 'mission-control-settings'
 const TODOS_KEY = 'mission-control-user-todos'
 const STAR_ORDER_KEY = 'mission-control-star-order'
 const CUSTOM_COLORS_KEY = 'mission-control-custom-colors'
+const OVERRIDES_KEY = 'mission-control-project-overrides'
 
 const TERMINAL_COLORS = {
   'Mission Control': '#d1d1ff',
@@ -94,6 +95,8 @@ function App() {
   const [userTodos, setUserTodos] = useState(() => load(TODOS_KEY, {}))
   const [starOrder, setStarOrder] = useState(() => load(STAR_ORDER_KEY, []))
   const [customColors, setCustomColors] = useState(() => load(CUSTOM_COLORS_KEY, {}))
+  const [projectOverrides, setProjectOverrides] = useState(() => load(OVERRIDES_KEY, {}))
+  const [editDialog, setEditDialog] = useState(null)
   const [editingId, setEditingId] = useState(null)
   const [editValue, setEditValue] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
@@ -103,7 +106,7 @@ function App() {
   const [newTodoText, setNewTodoText] = useState('')
   const [launchDialog, setLaunchDialog] = useState(null)
   const [newProjectDialog, setNewProjectDialog] = useState(false)
-  const [newProject, setNewProject] = useState({ name: '', path: '', tech: '', status: '' })
+  const [newProject, setNewProject] = useState({ name: '', path: '', tech: '', status: '', category: 'Lab' })
   const [scanResults, setScanResults] = useState(null)
   const [scanLoading, setScanLoading] = useState(false)
   const [scanSelected, setScanSelected] = useState({})
@@ -112,6 +115,7 @@ function App() {
   const newProjectDrag = useDraggable()
   const scanDrag = useDraggable()
   const launchDrag = useDraggable()
+  const editDrag = useDraggable()
   const [dragIndex, setDragIndex] = useState(null)
   const [filterOpen, setFilterOpen] = useState(false)
   const searchRef = useRef(null)
@@ -132,6 +136,30 @@ function App() {
     save(TODOS_KEY, next)
   }
 
+  // Project override getters — check overrides first, fall back to projects.json
+  const getStatus = (project) => projectOverrides[project.id]?.status ?? project.status
+  const getNextSteps = (project) => projectOverrides[project.id]?.nextSteps ?? project.nextSteps
+  const getTech = (project) => projectOverrides[project.id]?.tech ?? project.tech
+  const getDescription = (project) => projectOverrides[project.id]?.description ?? project.description ?? ''
+  const getCategoryOverride = (project) => projectOverrides[project.id]?.category ?? null
+
+  // Re-sort projects into overridden categories
+  const effectiveCategories = useMemo(() => {
+    const catMap = {}
+    projectData.categories.forEach((cat) => {
+      catMap[cat.name] = { ...cat, projects: [] }
+    })
+    projectData.categories.forEach((cat) => {
+      cat.projects.forEach((project) => {
+        const overriddenCat = getCategoryOverride(project)
+        const targetCat = overriddenCat && catMap[overriddenCat] ? overriddenCat : cat.name
+        catMap[targetCat].projects.push(project)
+      })
+    })
+    // Return in original category order, filtering out empties
+    return projectData.categories.map((cat) => catMap[cat.name]).filter((cat) => cat.projects.length > 0)
+  }, [projectOverrides])
+
   // Push CSS variables
   useEffect(() => {
     document.documentElement.style.setProperty('--tint-opacity', settings.tintOpacity / 100)
@@ -143,6 +171,7 @@ function App() {
     const handleKeyDown = (e) => {
       if (editingId || addingTodoId) return
       if (e.key === 'Escape') {
+        if (editDialog) { setEditDialog(null); editDrag.reset(); return }
         if (scanResults) { setScanResults(null); return }
         if (launchDialog) { setLaunchDialog(null); return }
         setSearch('')
@@ -153,7 +182,7 @@ function App() {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [editingId, addingTodoId, launchDialog])
+  }, [editingId, addingTodoId, launchDialog, editDialog])
 
   useEffect(() => {
     if (editingId && editRef.current) {
@@ -290,6 +319,62 @@ function App() {
     if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); setAddingTodoId(null) }
   }
 
+  const openEditDialog = (e, project) => {
+    e.stopPropagation()
+    setEditDialog({
+      project,
+      name: getName(project),
+      category: getCategoryOverride(project) || projectData.categories.find((c) => c.projects.some((p) => p.id === project.id))?.name || '',
+      status: getStatus(project),
+      nextSteps: getNextSteps(project),
+      description: getDescription(project),
+      tech: getTech(project).join(', '),
+    })
+  }
+
+  const saveEditDialog = () => {
+    if (!editDialog) return
+    const { project } = editDialog
+    const origCat = projectData.categories.find((c) => c.projects.some((p) => p.id === project.id))?.name || ''
+    const overrides = { ...projectOverrides }
+    const prev = overrides[project.id] || {}
+    const next = {}
+
+    // Only store fields that differ from the original
+    if (editDialog.category !== origCat) next.category = editDialog.category
+    if (editDialog.status !== project.status) next.status = editDialog.status
+    if (editDialog.nextSteps !== project.nextSteps) next.nextSteps = editDialog.nextSteps
+    if (editDialog.description !== (project.description ?? '')) next.description = editDialog.description
+    const techArr = editDialog.tech ? editDialog.tech.split(',').map((t) => t.trim()).filter(Boolean) : []
+    if (JSON.stringify(techArr) !== JSON.stringify(project.tech)) next.tech = techArr
+
+    // Handle rename via existing renames system
+    if (editDialog.name !== project.name) {
+      const nextRenames = { ...renames, [project.id]: editDialog.name }
+      setRenames(nextRenames)
+      save(STORAGE_KEY, nextRenames)
+    } else if (renames[project.id]) {
+      // User set it back to original name
+      if (editDialog.name === project.name) {
+        const nextRenames = { ...renames }
+        delete nextRenames[project.id]
+        setRenames(nextRenames)
+        save(STORAGE_KEY, nextRenames)
+      }
+    }
+
+    if (Object.keys(next).length > 0) {
+      overrides[project.id] = { ...prev, ...next }
+    } else {
+      delete overrides[project.id]
+    }
+    setProjectOverrides(overrides)
+    save(OVERRIDES_KEY, overrides)
+    setEditDialog(null)
+    editDrag.reset()
+    showToast('Project updated')
+  }
+
   const expandPath = (p) => p.replace(/^~/, '$HOME')
 
   const syncColorToTerminal = (name, hex) => {
@@ -413,6 +498,57 @@ function App() {
     setScanLoading(false)
   }
 
+  const browseDirectory = async () => {
+    try {
+      const res = await fetch('/api/browse-directory')
+      const data = await res.json()
+      if (data.path) {
+        const dirName = data.path.split('/').pop()
+        const autoName = dirName.replace(/[_-]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+        setNewProject((prev) => ({
+          ...prev,
+          path: data.path,
+          name: prev.name || autoName,
+        }))
+      }
+    } catch {
+      showToast('Browse failed')
+    }
+  }
+
+  const addManualProject = async () => {
+    if (!newProject.name.trim() || !newProject.path.trim()) {
+      showToast('Name and path are required')
+      return
+    }
+    try {
+      const res = await fetch('/api/add-projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          projects: [{
+            name: newProject.name.trim(),
+            path: newProject.path.trim(),
+            tech: newProject.tech ? newProject.tech.split(',').map((t) => t.trim()).filter(Boolean) : [],
+            status: newProject.status.trim() || 'New project',
+            category: newProject.category,
+          }],
+        }),
+      })
+      const data = await res.json()
+      if (data.ok) {
+        showToast(`Added "${newProject.name.trim()}"`)
+        setNewProjectDialog(false)
+        setNewProject({ name: '', path: '', tech: '', status: '', category: 'Lab' })
+        setTimeout(() => window.location.reload(), 500)
+      } else {
+        showToast('Failed to add project')
+      }
+    } catch {
+      showToast('Failed to add project')
+    }
+  }
+
   const addScannedProjects = async () => {
     const toAdd = Object.entries(scanSelected)
       .filter(([, cfg]) => cfg.selected)
@@ -479,7 +615,7 @@ function App() {
 
   const liveProjects = allProjects.filter((p) => p.url)
 
-  const searchFiltered = projectData.categories
+  const searchFiltered = effectiveCategories
     .map((cat) => ({
       ...cat,
       projects: cat.projects.filter((p) => {
@@ -487,9 +623,9 @@ function App() {
         const q = search.toLowerCase()
         return (
           getName(p).toLowerCase().includes(q) ||
-          p.status.toLowerCase().includes(q) ||
-          p.nextSteps.toLowerCase().includes(q) ||
-          p.tech.some((t) => t.toLowerCase().includes(q)) ||
+          getStatus(p).toLowerCase().includes(q) ||
+          getNextSteps(p).toLowerCase().includes(q) ||
+          getTech(p).some((t) => t.toLowerCase().includes(q)) ||
           getTodos(p.id).some((t) => t.toLowerCase().includes(q))
         )
       }),
@@ -504,9 +640,9 @@ function App() {
       const q = search.toLowerCase()
       return (
         getName(p).toLowerCase().includes(q) ||
-        p.status.toLowerCase().includes(q) ||
-        p.nextSteps.toLowerCase().includes(q) ||
-        p.tech.some((t) => t.toLowerCase().includes(q)) ||
+        getStatus(p).toLowerCase().includes(q) ||
+        getNextSteps(p).toLowerCase().includes(q) ||
+        getTech(p).some((t) => t.toLowerCase().includes(q)) ||
         getTodos(p.id).some((t) => t.toLowerCase().includes(q))
       )
     })
@@ -528,6 +664,10 @@ function App() {
   const starCount = stars.length
 
   const getCategoryForProject = (projectId) => {
+    for (const cat of effectiveCategories) {
+      if (cat.projects.some((p) => p.id === projectId)) return cat
+    }
+    // Fall back to original categories
     for (const cat of projectData.categories) {
       if (cat.projects.some((p) => p.id === projectId)) return cat
     }
@@ -574,6 +714,9 @@ function App() {
                 </svg>
               </a>
             )}
+            <button className="edit-btn" onClick={(e) => openEditDialog(e, project)} title="Edit project">
+              {'\u2699'}
+            </button>
             <button className={`star-btn ${isStarred(project.id) ? 'starred' : ''}`}
               onClick={(e) => toggleStar(e, project.id)}
               title={isStarred(project.id) ? 'Unstar' : 'Star'}>
@@ -583,12 +726,12 @@ function App() {
         </div>
 
         {settings.showStatus && (
-          <div className="project-status">{project.status}</div>
+          <div className="project-status">{getStatus(project)}</div>
         )}
 
-        {settings.showTags && project.tech.length > 0 && (
+        {settings.showTags && getTech(project).length > 0 && (
           <div className="tech-tags">
-            {project.tech.map((t) => (
+            {getTech(project).map((t) => (
               <span key={t} className="tech-tag">{t}</span>
             ))}
           </div>
@@ -598,7 +741,7 @@ function App() {
           <div className="next-steps" onClick={(e) => openLaunchDialog(e, project)}
             title="Click to launch">
             <span className="next-arrow">{'\u2192'}</span>
-            <span>{project.nextSteps}</span>
+            <span>{getNextSteps(project)}</span>
           </div>
         )}
 
@@ -710,7 +853,7 @@ function App() {
                 </button>
                 <div className="filter-pop-divider" />
                 {allCategories.map((name) => {
-                  const cat = projectData.categories.find((c) => c.name === name)
+                  const cat = effectiveCategories.find((c) => c.name === name)
                   const count = cat ? cat.projects.length : 0
                   return (
                     <button key={name}
@@ -777,16 +920,27 @@ function App() {
             </div>
             <div className="new-project-form">
               <label className="new-project-label">
+                Path
+                <div className="new-project-path-row">
+                  <input type="text" value={newProject.path}
+                    onChange={(e) => setNewProject({ ...newProject, path: e.target.value })}
+                    placeholder="~/path/to/project" />
+                  <button className="browse-btn" onClick={browseDirectory}>Browse</button>
+                </div>
+              </label>
+              <label className="new-project-label">
                 Name
                 <input type="text" value={newProject.name}
                   onChange={(e) => setNewProject({ ...newProject, name: e.target.value })}
                   placeholder="Project Name" />
               </label>
               <label className="new-project-label">
-                Path
-                <input type="text" value={newProject.path}
-                  onChange={(e) => setNewProject({ ...newProject, path: e.target.value })}
-                  placeholder="~/path/to/project" />
+                Category
+                <select value={newProject.category}
+                  onChange={(e) => setNewProject({ ...newProject, category: e.target.value })}
+                  className="new-project-select">
+                  {allCategories.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
               </label>
               <label className="new-project-label">
                 Tech (comma-separated)
@@ -802,6 +956,7 @@ function App() {
               </label>
             </div>
             <div className="dialog-actions">
+              <button className="dialog-launch" onClick={addManualProject}>Add Project</button>
               <button className="dialog-copy" onClick={scanForProjects} disabled={scanLoading}>
                 {scanLoading ? 'Scanning...' : 'Scan for New Projects'}
               </button>
@@ -892,6 +1047,79 @@ function App() {
                 Add Selected ({scanSelectedCount})
               </button>
               <button className="dialog-cancel" onClick={() => { setScanResults(null); scanDrag.reset() }}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit project dialog */}
+      {editDialog && (
+        <div className="dialog-overlay" onClick={() => { setEditDialog(null); editDrag.reset() }}>
+          <div className="dialog edit-dialog" onClick={(e) => e.stopPropagation()}
+            style={{ transform: `translate(${editDrag.pos.x}px, ${editDrag.pos.y}px)` }}>
+            <div className="dialog-header draggable-header" onMouseDown={editDrag.onMouseDown}>
+              <span className="dialog-title">Edit Project</span>
+              <button className="dialog-close" onClick={() => { setEditDialog(null); editDrag.reset() }}>&times;</button>
+            </div>
+            <div className="edit-form">
+              <label className="edit-field">
+                <span>Name</span>
+                <input type="text" value={editDialog.name}
+                  onChange={(e) => setEditDialog({ ...editDialog, name: e.target.value })} />
+              </label>
+              <label className="edit-field">
+                <span>Category</span>
+                <select value={editDialog.category}
+                  onChange={(e) => setEditDialog({ ...editDialog, category: e.target.value })}>
+                  {allCategories.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </label>
+              <label className="edit-field">
+                <span>Status</span>
+                <input type="text" value={editDialog.status}
+                  onChange={(e) => setEditDialog({ ...editDialog, status: e.target.value })} />
+              </label>
+              <label className="edit-field">
+                <span>Next Steps</span>
+                <input type="text" value={editDialog.nextSteps}
+                  onChange={(e) => setEditDialog({ ...editDialog, nextSteps: e.target.value })} />
+              </label>
+              <label className="edit-field">
+                <span>Description</span>
+                <textarea rows={2} value={editDialog.description}
+                  onChange={(e) => setEditDialog({ ...editDialog, description: e.target.value })} />
+              </label>
+              <label className="edit-field">
+                <span>Tech (comma-separated)</span>
+                <input type="text" value={editDialog.tech}
+                  onChange={(e) => setEditDialog({ ...editDialog, tech: e.target.value })} />
+              </label>
+              <label className="edit-field">
+                <span>Path</span>
+                <input type="text" value={editDialog.project.path || ''} readOnly
+                  style={{ opacity: 0.5, cursor: 'default' }} />
+              </label>
+              <div className="color-picker-row">
+                <span className="color-picker-label">Card Color</span>
+                <input
+                  type="color"
+                  className="color-picker-input"
+                  value={getResolvedColor(editDialog.project, getCategoryForProject(editDialog.project.id))}
+                  onChange={(e) => setProjectColor(editDialog.project.id, e.target.value)}
+                />
+                <span className="color-picker-hex">
+                  {getResolvedColor(editDialog.project, getCategoryForProject(editDialog.project.id))}
+                </span>
+                {customColors[editDialog.project.id] && (
+                  <button className="color-picker-reset" onClick={() => clearProjectColor(editDialog.project.id)}>
+                    Reset
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className="dialog-actions">
+              <button className="dialog-launch" onClick={saveEditDialog}>Save</button>
+              <button className="dialog-cancel" onClick={() => { setEditDialog(null); editDrag.reset() }}>Cancel</button>
             </div>
           </div>
         </div>
