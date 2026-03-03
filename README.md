@@ -18,6 +18,7 @@ Mission Control gives you a single-page overview of all your active projects wit
 - **Glassmorphic UI** — tinted card backgrounds per category with adjustable opacity
 - **Terminal Colors mode** — toggle in Settings to color each card with its matching terminal background color (from the `proj` shell function)
 - **Per-project color picker** — change any card's color in the launch dialog; automatically syncs to `~/.claude/terminal-colors.sh` so `proj` uses the new color immediately
+- **Project edit dialog** — pencil icon on each card opens an editor to override name, category, status, next steps, description, and tech tags (persisted in localStorage)
 - **Customizable settings** (hamburger menu):
   - Content scale slider (70%–130%) — scales fonts/icons within cards
   - Card tint opacity slider (0%–40%)
@@ -84,6 +85,10 @@ npm start
 ```
 
 The dashboard runs at [http://localhost:3333](http://localhost:3333).
+
+### Auto-Start on Login
+
+A macOS LaunchAgent (`com.tedbarnett.mission-control.plist`) starts the Vite dev server automatically on login. The LaunchAgent and shell aliases (`cc`, `dashboard`) reference `~/.claude/dashboard/`, which is a **symlink** to this repo — so there's only one copy of the code to maintain.
 
 ### Adding Projects
 
