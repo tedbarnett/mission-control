@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
+const IS_WIN = process.platform === 'win32'
 const TERMINAL_COLORS_PATH = join(homedir(), '.claude/terminal-colors.sh')
 
 function readJsonBody(req) {
@@ -25,11 +26,37 @@ function localApiPlugin() {
   return {
     name: 'local-api',
     configureServer(server) {
+      // Platform info endpoint
+      server.middlewares.use('/api/platform', (req, res) => {
+        if (req.method !== 'GET') { res.statusCode = 405; res.end('Method not allowed'); return }
+        res.setHeader('Content-Type', 'application/json')
+        res.end(JSON.stringify({ platform: process.platform, home: homedir() }))
+      })
+
+      // Check if a project path exists on disk
+      server.middlewares.use('/api/check-path', async (req, res) => {
+        if (req.method !== 'POST') { res.statusCode = 405; res.end('Method not allowed'); return }
+        try {
+          const { path } = await readJsonBody(req)
+          const expanded = path.replace(/^~/, homedir())
+          res.setHeader('Content-Type', 'application/json')
+          res.end(JSON.stringify({ exists: fs.existsSync(expanded), expanded }))
+        } catch (err) {
+          res.statusCode = 500
+          res.end(JSON.stringify({ error: err.message }))
+        }
+      })
+
       // Update terminal-colors.sh
       server.middlewares.use('/api/update-color', async (req, res) => {
         if (req.method !== 'POST') { res.statusCode = 405; res.end('Method not allowed'); return }
         try {
           const { name, hex } = await readJsonBody(req)
+          if (!fs.existsSync(TERMINAL_COLORS_PATH)) {
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ ok: false, reason: 'not-supported' }))
+            return
+          }
           const content = fs.readFileSync(TERMINAL_COLORS_PATH, 'utf8')
           const lines = content.split('\n')
           let updated = false
@@ -61,10 +88,9 @@ function localApiPlugin() {
         try {
           const { command } = await readJsonBody(req)
           const expanded = command.replace(/^~/, homedir())
-          const child = spawn('zsh', ['-lc', expanded], {
-            detached: true,
-            stdio: 'ignore',
-          })
+          const child = IS_WIN
+            ? spawn('cmd', ['/c', expanded], { detached: true, stdio: 'ignore', shell: true })
+            : spawn('zsh', ['-lc', expanded], { detached: true, stdio: 'ignore' })
           child.unref()
           res.setHeader('Content-Type', 'application/json')
           res.end(JSON.stringify({ ok: true, pid: child.pid }))
@@ -97,6 +123,10 @@ function localApiPlugin() {
           const scanDirs = [
             { dir: join(home, 'Github'), source: 'github' },
             { dir: join(home, 'barnettlabs Dropbox', 'Ted Barnett', 'Projects'), source: 'dropbox' },
+            ...(IS_WIN ? [
+              { dir: 'D:\\Github-D', source: 'github' },
+              { dir: join(home, 'Documents', 'GitHub'), source: 'github' },
+            ] : []),
           ]
 
           const discovered = []
@@ -197,38 +227,70 @@ function localApiPlugin() {
         }
       })
 
-      // Browse for a directory using macOS native folder picker
+      // Browse for a directory using native folder picker
       server.middlewares.use('/api/browse-directory', async (req, res) => {
         if (req.method !== 'GET') { res.statusCode = 405; res.end('Method not allowed'); return }
-        const script = 'try\nset f to POSIX path of (choose folder with prompt "Select project directory")\nreturn f\non error\nreturn ""\nend try'
-        execFile('osascript', ['-e', script], (err, stdout) => {
-          res.setHeader('Content-Type', 'application/json')
-          if (err) { res.end(JSON.stringify({ path: null })); return }
-          const raw = stdout.trim().replace(/\/$/, '')
-          if (!raw) { res.end(JSON.stringify({ path: null })); return }
-          const path = raw.replace(homedir(), '~')
-          res.end(JSON.stringify({ path }))
-        })
+        res.setHeader('Content-Type', 'application/json')
+        if (IS_WIN) {
+          const psScript = `Add-Type -AssemblyName System.Windows.Forms; $f = New-Object System.Windows.Forms.FolderBrowserDialog; $f.Description = 'Select project directory'; if($f.ShowDialog() -eq 'OK'){$f.SelectedPath}`
+          execFile('powershell', ['-NoProfile', '-Command', psScript], (err, stdout) => {
+            if (err) { res.end(JSON.stringify({ path: null })); return }
+            const raw = stdout.trim()
+            if (!raw) { res.end(JSON.stringify({ path: null })); return }
+            const path = raw.replace(homedir(), '~')
+            res.end(JSON.stringify({ path }))
+          })
+        } else {
+          const script = 'try\nset f to POSIX path of (choose folder with prompt "Select project directory")\nreturn f\non error\nreturn ""\nend try'
+          execFile('osascript', ['-e', script], (err, stdout) => {
+            if (err) { res.end(JSON.stringify({ path: null })); return }
+            const raw = stdout.trim().replace(/\/$/, '')
+            if (!raw) { res.end(JSON.stringify({ path: null })); return }
+            const path = raw.replace(homedir(), '~')
+            res.end(JSON.stringify({ path }))
+          })
+        }
       })
 
-      // Launch a command in a new Terminal.app window
+      // Launch a command in a new terminal window
       server.middlewares.use('/api/launch-terminal', async (req, res) => {
         if (req.method !== 'POST') { res.statusCode = 405; res.end('Method not allowed'); return }
         try {
           const { command } = await readJsonBody(req)
-          const script = `tell application "Terminal"
+          // Extract the directory from cd "path" && ... and verify it exists
+          const cdMatch = command.match(/^cd\s+"([^"]+)"/)
+          if (cdMatch) {
+            const dir = cdMatch[1]
+            if (!fs.existsSync(dir)) {
+              res.setHeader('Content-Type', 'application/json')
+              res.end(JSON.stringify({ ok: false, reason: 'path-not-found', path: dir }))
+              return
+            }
+          }
+          if (IS_WIN) {
+            const child = spawn('cmd', ['/c', 'start', 'cmd', '/k', command], {
+              detached: true,
+              stdio: 'ignore',
+              shell: true,
+            })
+            child.unref()
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ ok: true }))
+          } else {
+            const script = `tell application "Terminal"
   do script ${JSON.stringify(command)}
   activate
 end tell`
-          execFile('osascript', ['-e', script], (err) => {
-            if (err) {
-              res.statusCode = 500
-              res.end(JSON.stringify({ error: err.message }))
-            } else {
-              res.setHeader('Content-Type', 'application/json')
-              res.end(JSON.stringify({ ok: true }))
-            }
-          })
+            execFile('osascript', ['-e', script], (err) => {
+              if (err) {
+                res.statusCode = 500
+                res.end(JSON.stringify({ error: err.message }))
+              } else {
+                res.setHeader('Content-Type', 'application/json')
+                res.end(JSON.stringify({ ok: true }))
+              }
+            })
+          }
         } catch (err) {
           res.statusCode = 500
           res.end(JSON.stringify({ error: err.message }))

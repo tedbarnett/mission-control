@@ -118,6 +118,7 @@ function App() {
   const editDrag = useDraggable()
   const [dragIndex, setDragIndex] = useState(null)
   const [filterOpen, setFilterOpen] = useState(false)
+  const [platformInfo, setPlatformInfo] = useState({ platform: 'darwin', home: '' })
   const searchRef = useRef(null)
   const editRef = useRef(null)
   const menuRef = useRef(null)
@@ -166,6 +167,11 @@ function App() {
     document.documentElement.style.setProperty('--tint-hover-opacity', Math.min((settings.tintOpacity + 8) / 100, 0.4))
     document.documentElement.style.setProperty('--content-scale', (settings.contentScale ?? 100) / 100)
   }, [settings.tintOpacity, settings.contentScale])
+
+  // Fetch platform info once on mount
+  useEffect(() => {
+    fetch('/api/platform').then(r => r.json()).then(setPlatformInfo).catch(() => {})
+  }, [])
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -375,7 +381,7 @@ function App() {
     showToast('Project updated')
   }
 
-  const expandPath = (p) => p.replace(/^~/, '$HOME')
+  const expandPath = (p) => platformInfo.home ? p.replace(/^~/, platformInfo.home) : p.replace(/^~/, '$HOME')
 
   const syncColorToTerminal = (name, hex) => {
     fetch('/api/update-color', {
@@ -415,7 +421,18 @@ function App() {
   const openLaunchDialog = (e, project) => {
     e.stopPropagation()
     if (!project.path) return
-    setLaunchDialog({ project, command: `cd "${expandPath(project.path)}" && claude` })
+    const command = `cd "${expandPath(project.path)}" && claude`
+    setLaunchDialog({ project, command, pathExists: null })
+    fetch('/api/check-path', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: project.path }),
+    })
+      .then((r) => r.json())
+      .then(({ exists }) => {
+        setLaunchDialog((prev) => prev ? { ...prev, pathExists: exists } : prev)
+      })
+      .catch(() => {})
   }
 
   const copyLaunchCmd = () => {
@@ -433,7 +450,13 @@ function App() {
       body: JSON.stringify({ command: launchDialog.command }),
     })
       .then((r) => r.json())
-      .then(() => showToast('Launched in Terminal'))
+      .then((data) => {
+        if (data.reason === 'path-not-found') {
+          showToast(`Directory not found: ${data.path}`)
+        } else {
+          showToast('Launched in Terminal')
+        }
+      })
       .catch(() => {
         navigator.clipboard.writeText(launchDialog.command)
         showToast('Fallback: copied to clipboard')
@@ -1150,8 +1173,11 @@ function App() {
                 </button>
               )}
             </div>
+            {launchDialog.pathExists === false && (
+              <div className="dialog-warning">Directory not found — clone the repo or update the project path</div>
+            )}
             <div className="dialog-actions">
-              <button ref={cmdRef} className="dialog-launch dialog-launch-big" onClick={launchInTerminal}>Launch</button>
+              <button ref={cmdRef} className="dialog-launch dialog-launch-big" onClick={launchInTerminal} disabled={launchDialog.pathExists === false}>Launch</button>
               <button className="dialog-copy" onClick={copyLaunchCmd}>Copy</button>
             </div>
           </div>

@@ -869,6 +869,21 @@
   border-color: #3b82f6;
 }
 
+.dialog-warning {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.dialog-launch:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
 .dialog-actions {
   display: flex;
   justify-content: flex-end;
