@@ -10,6 +10,7 @@
           "id": 1,
           "name": "Mission Control",
           "path": "~/Github/mission-control",
+          "repo": "https://github.com/tedbarnett/mission-control",
           "tech": [
             "React 19",
             "Vite",
@@ -27,6 +28,7 @@
           "id": 2,
           "name": "Post-Scarcity",
           "path": "~/Github/Post-Scarcity",
+          "repo": "https://github.com/tedbarnett/Post-Scarcity",
           "tech": [
             "React 18",
             "Cloudflare Pages",
@@ -44,6 +46,7 @@
           "id": 3,
           "name": "Reason AI",
           "path": "~/Github/Reason_AI",
+          "repo": "https://github.com/tedbarnett/Reason_AI",
           "tech": [
             "Flask",
             "SQLite",
@@ -62,6 +65,7 @@
           "id": 22,
           "name": "Gabriel",
           "path": "~/Github/Gabriel",
+          "repo": "https://github.com/tedbarnett/Gabriel",
           "tech": [],
           "status": "New project",
           "nextSteps": "Set up project",
@@ -71,6 +75,7 @@
           "id": 23,
           "name": "Growing Up V2",
           "path": "~/Github/Growing-Up-v2",
+          "repo": "https://github.com/tedbarnett/Growing-Up-v2",
           "tech": [],
           "status": "New project",
           "nextSteps": "Set up project",
@@ -87,6 +92,7 @@
           "id": 4,
           "name": "Home Movies",
           "path": "~/Github/Home_Movies",
+          "repo": "https://github.com/tedbarnett/Home_Movies",
           "tech": [
             "Flask",
             "Whisper",
@@ -107,6 +113,7 @@
           "id": 5,
           "name": "Growing Up",
           "path": "~/Github/Growing_Up-Claude",
+          "repo": "https://github.com/tedbarnett/Growing_Up-Claude",
           "tech": [
             "React 19",
             "TypeScript",
@@ -140,6 +147,7 @@
           "id": 24,
           "name": "SlideShow",
           "path": "~/Github/SlideShow",
+          "repo": "https://github.com/tedbarnett/SlideShow",
           "tech": [],
           "status": "New project",
           "nextSteps": "Set up project",

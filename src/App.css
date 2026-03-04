@@ -884,6 +884,14 @@
   cursor: not-allowed;
 }
 
+.dialog-clone {
+  background: #3b82f6;
+}
+
+.dialog-clone:hover:not(:disabled) {
+  background: #2563eb;
+}
+
 .dialog-actions {
   display: flex;
   justify-content: flex-end;

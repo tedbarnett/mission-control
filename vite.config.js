@@ -47,6 +47,39 @@ function localApiPlugin() {
         }
       })
 
+      // Clone a git repo to a local path
+      server.middlewares.use('/api/clone-repo', async (req, res) => {
+        if (req.method !== 'POST') { res.statusCode = 405; res.end('Method not allowed'); return }
+        try {
+          const { repo, path } = await readJsonBody(req)
+          if (!repo || !path) {
+            res.statusCode = 400
+            res.end(JSON.stringify({ error: 'repo and path are required' }))
+            return
+          }
+          const expanded = path.replace(/^~/, homedir())
+          if (fs.existsSync(expanded)) {
+            res.setHeader('Content-Type', 'application/json')
+            res.end(JSON.stringify({ ok: false, reason: 'already-exists' }))
+            return
+          }
+          const child = spawn('git', ['clone', repo, expanded], { stdio: ['ignore', 'pipe', 'pipe'] })
+          let stderr = ''
+          child.stderr.on('data', (d) => { stderr += d })
+          child.on('close', (code) => {
+            res.setHeader('Content-Type', 'application/json')
+            if (code === 0) {
+              res.end(JSON.stringify({ ok: true }))
+            } else {
+              res.end(JSON.stringify({ ok: false, reason: 'clone-failed', error: stderr.trim() }))
+            }
+          })
+        } catch (err) {
+          res.statusCode = 500
+          res.end(JSON.stringify({ error: err.message }))
+        }
+      })
+
       // Update terminal-colors.sh
       server.middlewares.use('/api/update-color', async (req, res) => {
         if (req.method !== 'POST') { res.statusCode = 405; res.end('Method not allowed'); return }

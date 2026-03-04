@@ -142,6 +142,7 @@ function App() {
   const getNextSteps = (project) => projectOverrides[project.id]?.nextSteps ?? project.nextSteps
   const getTech = (project) => projectOverrides[project.id]?.tech ?? project.tech
   const getDescription = (project) => projectOverrides[project.id]?.description ?? project.description ?? ''
+  const getRepo = (project) => projectOverrides[project.id]?.repo ?? project.repo ?? ''
   const getCategoryOverride = (project) => projectOverrides[project.id]?.category ?? null
 
   // Re-sort projects into overridden categories
@@ -335,6 +336,7 @@ function App() {
       nextSteps: getNextSteps(project),
       description: getDescription(project),
       tech: getTech(project).join(', '),
+      repo: getRepo(project),
     })
   }
 
@@ -351,6 +353,7 @@ function App() {
     if (editDialog.status !== project.status) next.status = editDialog.status
     if (editDialog.nextSteps !== project.nextSteps) next.nextSteps = editDialog.nextSteps
     if (editDialog.description !== (project.description ?? '')) next.description = editDialog.description
+    if (editDialog.repo !== (project.repo ?? '')) next.repo = editDialog.repo
     const techArr = editDialog.tech ? editDialog.tech.split(',').map((t) => t.trim()).filter(Boolean) : []
     if (JSON.stringify(techArr) !== JSON.stringify(project.tech)) next.tech = techArr
 
@@ -422,7 +425,7 @@ function App() {
     e.stopPropagation()
     if (!project.path) return
     const command = `cd "${expandPath(project.path)}" && claude`
-    setLaunchDialog({ project, command, pathExists: null })
+    setLaunchDialog({ project, command, pathExists: null, cloning: false })
     fetch('/api/check-path', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -433,6 +436,33 @@ function App() {
         setLaunchDialog((prev) => prev ? { ...prev, pathExists: exists } : prev)
       })
       .catch(() => {})
+  }
+
+  const cloneRepo = () => {
+    if (!launchDialog) return
+    const repo = getRepo(launchDialog.project)
+    if (!repo) return
+    setLaunchDialog((prev) => prev ? { ...prev, cloning: true } : prev)
+    showToast('Cloning repository...')
+    fetch('/api/clone-repo', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ repo, path: launchDialog.project.path }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.ok) {
+          showToast('Clone complete!')
+          setLaunchDialog((prev) => prev ? { ...prev, pathExists: true, cloning: false } : prev)
+        } else {
+          showToast(`Clone failed: ${data.error || data.reason}`)
+          setLaunchDialog((prev) => prev ? { ...prev, cloning: false } : prev)
+        }
+      })
+      .catch(() => {
+        showToast('Clone failed')
+        setLaunchDialog((prev) => prev ? { ...prev, cloning: false } : prev)
+      })
   }
 
   const copyLaunchCmd = () => {
@@ -1122,6 +1152,12 @@ function App() {
                 <input type="text" value={editDialog.project.path || ''} readOnly
                   style={{ opacity: 0.5, cursor: 'default' }} />
               </label>
+              <label className="edit-field">
+                <span>GitHub Repo URL</span>
+                <input type="text" value={editDialog.repo}
+                  placeholder="https://github.com/user/repo"
+                  onChange={(e) => setEditDialog({ ...editDialog, repo: e.target.value })} />
+              </label>
               <div className="color-picker-row">
                 <span className="color-picker-label">Card Color</span>
                 <input
@@ -1174,9 +1210,16 @@ function App() {
               )}
             </div>
             {launchDialog.pathExists === false && (
-              <div className="dialog-warning">Directory not found — clone the repo or update the project path</div>
+              <div className="dialog-warning">
+                Directory not found{getRepo(launchDialog.project) ? '' : ' — set a GitHub Repo URL in project settings to enable cloning'}
+              </div>
             )}
             <div className="dialog-actions">
+              {launchDialog.pathExists === false && getRepo(launchDialog.project) && (
+                <button className="dialog-launch dialog-clone" onClick={cloneRepo} disabled={launchDialog.cloning}>
+                  {launchDialog.cloning ? 'Cloning...' : 'Clone'}
+                </button>
+              )}
               <button ref={cmdRef} className="dialog-launch dialog-launch-big" onClick={launchInTerminal} disabled={launchDialog.pathExists === false}>Launch</button>
               <button className="dialog-copy" onClick={copyLaunchCmd}>Copy</button>
             </div>
