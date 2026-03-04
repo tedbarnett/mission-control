@@ -420,11 +420,16 @@ function App() {
     return category.color
   }
 
+  const buildLaunchCommand = (project) => {
+    const cd = `cd "${expandPath(project.path)}" && claude`
+    return platformInfo.platform === 'win32' ? `title ${getName(project)} && ${cd}` : cd
+  }
+
   // Launch dialog — just cd + claude, todos synced separately
   const openLaunchDialog = (e, project) => {
     e.stopPropagation()
     if (!project.path) return
-    const command = `cd "${expandPath(project.path)}" && claude`
+    const command = buildLaunchCommand(project)
     setLaunchDialog({ project, command, pathExists: null, cloning: false })
     fetch('/api/check-path', {
       method: 'POST',
@@ -663,7 +668,18 @@ function App() {
 
   const handleCardClick = (project) => {
     if (!project.path) return
-    setLaunchDialog({ project, command: `cd "${expandPath(project.path)}" && claude` })
+    const command = buildLaunchCommand(project)
+    setLaunchDialog({ project, command, pathExists: null, cloning: false })
+    fetch('/api/check-path', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ path: project.path }),
+    })
+      .then((r) => r.json())
+      .then(({ exists }) => {
+        setLaunchDialog((prev) => prev ? { ...prev, pathExists: exists } : prev)
+      })
+      .catch(() => {})
   }
 
   const liveProjects = allProjects.filter((p) => p.url)
