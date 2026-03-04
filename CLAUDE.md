@@ -38,6 +38,11 @@ Mission Control is a React 19 + Vite dashboard that manages and launches Claude 
 - `/api/scan-projects` includes Windows-specific scan directories (`D:\Github-D`, `~/Documents/GitHub`)
 - Frontend `expandPath` resolves `~` to actual home directory via `/api/platform` instead of relying on shell `$HOME`
 
+## Session Conventions
+- Always run `git pull` at the start of each session to pick up changes from other machines/sessions
+- Commit and push at the end of each work session to keep all machines in sync
+- If `git pull` encounters merge conflicts, resolve them before proceeding
+
 ## Build & Run
 ```bash
 npm run dev        # Dev mode with HMR
